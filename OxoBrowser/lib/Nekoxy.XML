@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Nekoxy</name>
+    </assembly>
+    <members>
+        <member name="T:Nekoxy.HttpProxy">
+            <summary>
+            HTTPプロキシサーバー。
+            HTTPプロトコルにのみ対応し、HTTPS等はサポートしない。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.HttpProxy.AfterSessionComplete">
+            <summary>
+            HTTPレスポンスをプロキシ クライアントに送信完了した際に発生。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.HttpProxy.AfterReadRequestHeaders">
+            <summary>
+            リクエストヘッダを読み込み完了した際に発生。
+            ボディは受信前。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.HttpProxy.AfterReadResponseHeaders">
+            <summary>
+            レスポンスヘッダを読み込み完了した際に発生。
+            ボディは受信前。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpProxy.UpstreamProxyConfig">
+            <summary>
+            上流プロキシ設定。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpProxy.IsInListening">
+            <summary>
+            プロキシサーバーが Listening 中かどうかを取得。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.HttpProxy.Startup(System.Int32,System.Boolean,System.Boolean)">
+            <summary>
+            指定ポートで Listening を開始する。
+            Shutdown() を呼び出さずに2回目の Startup() を呼び出した場合、InvalidOperationException が発生する。
+            </summary>
+            <param name="listeningPort">Listeningするポート。</param>
+            <param name="useIpV6">falseの場合、127.0.0.1で待ち受ける。trueの場合、::1で待ち受ける。既定false。</param>
+            <param name="isSetProxyInProcess">trueの場合、プロセス内IEプロキシの設定を実施し、HTTP通信をNekoxyに向ける。既定true。</param>
+        </member>
+        <member name="M:Nekoxy.HttpProxy.Shutdown">
+            <summary>
+            Listening しているスレッドを終了し、ソケットを閉じる。
+            </summary>
+        </member>
+        <member name="T:Nekoxy.HttpRequest">
+            <summary>
+            HTTPリクエストデータ。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.HttpRequest.#ctor(TrotiNet.HttpRequestLine,TrotiNet.HttpHeaders,System.Byte[])">
+            <summary>
+            リクエストライン、ヘッダ、ボディを元に初期化。
+            </summary>
+            <param name="requestLine">HTTPリクエストライン</param>
+            <param name="headers">HTTPリクエストヘッダ</param>
+            <param name="body">HTTPリクエストボディ</param>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.RequestLine">
+            <summary>
+            HTTPリクエストライン。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.Headers">
+            <summary>
+            HTTPヘッダ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.Body">
+            <summary>
+            HTTPリクエストボディ。
+            Transfer-Encoding: chunked なHTTPリクエストの RequestBody の読み取りは未対応。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.PathAndQuery">
+            <summary>
+            パスとクエリ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.Charset">
+            <summary>
+            リクエストの文字エンコーディング。
+            content-typeヘッダに指定されたcharsetを元に生成される。
+            指定がない場合はUS-ASCII。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpRequest.BodyAsString">
+            <summary>
+            HTTPリクエストボディを文字列で取得する。
+            Transfer-Encoding: chunked なHTTPリクエストの RequestBody の読み取りは未対応。
+            </summary>
+        </member>
+        <member name="T:Nekoxy.HttpResponse">
+            <summary>
+            HTTPレスポンスデータ。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.HttpResponse.#ctor(TrotiNet.HttpStatusLine,TrotiNet.HttpHeaders,System.Byte[])">
+            <summary>
+            HTTPステータス、ヘッダ、ボディを元に初期化。
+            </summary>
+            <param name="statusLine">HTTPステータスライン。</param>
+            <param name="headers">HTTPレスポンスヘッダ。</param>
+            <param name="body">HTTPレスポンスボディ。</param>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.StatusLine">
+            <summary>
+            HTTPステータスライン。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.Headers">
+            <summary>
+            HTTPヘッダヘッダ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.Body">
+            <summary>
+            HTTPレスポンスボディ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.ContentType">
+            <summary>
+            content-type ヘッダ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.MimeType">
+            <summary>
+            content-type ヘッダから MIME Type のみ取得。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.Charset">
+            <summary>
+            レスポンスの文字エンコーディング。
+            content-typeヘッダに指定されたcharsetを元に生成される。
+            指定がない場合はUS-ASCII。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.HttpResponse.BodyAsString">
+            <summary>
+            HTTPレスポンスボディを文字列で取得する。
+            </summary>
+        </member>
+        <member name="T:Nekoxy.NekoxyTcpServer">
+            <summary>
+            不具合修正のためにしぶしぶ継承
+            </summary>
+        </member>
+        <member name="M:Nekoxy.NekoxyTcpServer.Shutdown">
+            <summary>
+            TrotiNet.TcpServer.Stop() では Keep-Alive な Socket の後始末が行われないのでとりあえずこれで
+            </summary>
+        </member>
+        <member name="T:Nekoxy.ProxyConfig">
+            <summary>
+            プロキシ設定。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.ProxyConfig.Type">
+            <summary>
+            タイプ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.ProxyConfig.SpecificProxyHost">
+            <summary>
+            指定プロキシのホスト。
+            
+            TrotiNet は Dns.GetHostAddresses で取得されたアドレスを順番に接続試行するため、
+            接続先によっては動作が遅くなる可能性がある。
+            例えば 127.0.0.1 で待ち受けているローカルプロキシに対して接続したい場合、
+            localhost を指定するとまず ::1 へ接続試行するため、動作が遅くなってしまう。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.ProxyConfig.SpecificProxyPort">
+            <summary>
+            指定プロキシのポート。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.ProxyConfig.#ctor(Nekoxy.ProxyConfigType,System.String,System.Int32)">
+            <summary>
+            設定を指定し、初期化します。
+            </summary>
+            <param name="type">プロキシタイプ</param>
+            <param name="specificProxyHost">指定プロキシのホスト</param>
+            <param name="specificProxyPort">指定プロキシのポート</param>
+        </member>
+        <member name="T:Nekoxy.ProxyConfigType">
+            <summary>
+            プロキシ設定の種類。
+            </summary>
+        </member>
+        <member name="F:Nekoxy.ProxyConfigType.SystemProxy">
+            <summary>
+            システムのプロキシ設定を使用。
+            </summary>
+        </member>
+        <member name="F:Nekoxy.ProxyConfigType.SpecificProxy">
+            <summary>
+            指定のプロキシ設定を使用。
+            </summary>
+        </member>
+        <member name="F:Nekoxy.ProxyConfigType.DirectAccess">
+            <summary>
+            プロキシを使用せず、直接サーバーに接続。
+            </summary>
+        </member>
+        <member name="T:Nekoxy.Session">
+            <summary>
+            HTTPセッションデータ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.Session.Request">
+            <summary>
+            HTTPリクエストデータ。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.Session.Response">
+            <summary>
+            HTTPレスポンスデータ。
+            </summary>
+        </member>
+        <member name="T:Nekoxy.TransparentProxyLogic">
+            <summary>
+            通信データを透過し読み取るためのProxyLogic。
+            Transfer-Encoding: chunked なHTTPリクエストの RequestBody の読み取りは未対応。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.TransparentProxyLogic.AfterSessionComplete">
+            <summary>
+            HTTPレスポンスをプロキシ クライアントに送信完了した際に発生。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.TransparentProxyLogic.AfterReadRequestHeaders">
+            <summary>
+            リクエストヘッダを読み込み完了した際に発生。
+            ボディは受信前。
+            </summary>
+        </member>
+        <member name="E:Nekoxy.TransparentProxyLogic.AfterReadResponseHeaders">
+            <summary>
+            レスポンスヘッダを読み込み完了した際に発生。
+            ボディは受信前。
+            </summary>
+        </member>
+        <member name="P:Nekoxy.TransparentProxyLogic.UpstreamProxyConfig">
+            <summary>
+            上流プロキシ設定。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.CreateProxy(TrotiNet.HttpSocket)">
+            <summary>
+            TcpServerがインスタンスを生成する際に使用するメソッド。
+            接続(AcceptCallback)の都度呼び出され、インスタンスが生成される。
+            </summary>
+            <param name="clientSocket">Browser-Proxy間Socket。SocketBP。</param>
+            <returns>ProxyLogicインスタンス。</returns>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.#ctor(TrotiNet.HttpSocket)">
+            <summary>
+            SocketBPからインスタンスを初期化。
+            接続(AcceptCallback)の都度インスタンスが生成される。
+            </summary>
+            <param name="clientSocket">Browser-Proxy間Socket。SocketBP。</param>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.OnReceiveRequest">
+            <summary>
+            クライアントからリクエストヘッダまで読み込み、サーバーアクセス前のタイミング。
+            上流プロキシの設定を行う。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.SendRequest">
+            <summary>
+            SendResponseをoverrideし、リクエストデータを読み取る。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.OnReceiveResponse">
+            <summary>
+            OnReceiveResponseをoverrideし、レスポンスデータを読み取る。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.TransparentProxyLogic.GetContentWhenUnknownLength">
+            <summary>
+            Transfer-Encoding も Content-Length も不明の場合、TrotiNet の SendResponse() にならい、Socket.Receive() が 0 になるまで受ける。
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Nekoxy.WinInetUtil">
+            <summary>
+            WinINet関連ユーティリティ。
+            </summary>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.SetProxyInProcess(System.String,System.String)">
+            <summary>
+            urlmon.dllを用いて、プロセス内プロキシ設定を適用。
+            </summary>
+            <param name="proxy">プロキシサーバー</param>
+            <param name="proxyBypass">バイパスリスト</param>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.SetProxyInProcessForNekoxy(System.Int32)">
+            <summary>
+            urlmon.dllを用いて、システムプロキシのhttpプロキシ設定をNekoxyに置換したプロキシ設定をプロセス内プロキシ設定に適用。
+            </summary>
+            <param name="listeningPort">ポート</param>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.GetSystemHttpProxyHost">
+            <summary>
+            システムプロキシに設定されたHTTPプロキシのホスト名を取得。
+            </summary>
+            <returns>システムHTTPプロキシのホスト名。設定されていない場合はnullを返す。</returns>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.GetSystemHttpProxyPort">
+            <summary>
+            システムプロキシに設定されたHTTPプロキシのポート番号を取得。
+            </summary>
+            <returns>システムHTTPプロキシのポート番号。設定されていない場合は0を返す。</returns>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.GetSystemHttpProxy">
+            <summary>
+            システムプロキシに設定されたHTTPプロキシ設定を取得。
+            </summary>
+            <returns>システムHTTPプロキシ設定。設定されていない場合はnullを返す。</returns>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.GetProxyConfig(System.Int32)">
+            <summary>
+            システムプロキシのhttpプロキシ設定をNekoxyに置換したプロキシ設定を取得。
+            </summary>
+            <param name="listeningPort">Listeningポート</param>
+            <returns>編集後プロキシ設定</returns>
+        </member>
+        <member name="M:Nekoxy.WinInetUtil.WinHttpGetIEProxyConfigForCurrentUser">
+            <summary>
+            WinHTTPでIEプロキシ設定を取得。
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

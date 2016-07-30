@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +18,21 @@ namespace OxoBrowser
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
+        public static MainWindow thisFrm;
+
         public MainWindow()
         {
+            thisFrm = this;
             InitializeComponent();
+
+        }
+
+        private void winMain_Loaded(object sender, RoutedEventArgs e)
+        {
+            //初始化
+            webMain.Navigate("http://www.dmm.com/");
         }
     }
 }
