@@ -25,8 +25,8 @@ namespace MinecraftElf.MCWebBrowser
         public static ImageSource BrowserSnapShot(WebBrowser targetBrowser)
         {
             // 获取宽高
-            int screenWidth = (int)targetBrowser.Width;
-            int screenHeight = (int)targetBrowser.Height;
+            int screenWidth = (int)targetBrowser.ActualWidth;
+            int screenHeight = (int)targetBrowser.ActualHeight;
 
             IntPtr myIntptr = targetBrowser.Handle;
             int hwndInt = myIntptr.ToInt32();

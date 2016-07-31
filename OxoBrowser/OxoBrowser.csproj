@@ -51,13 +51,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -78,9 +75,17 @@
     <Compile Include="Base\IEProxy.cs" />
     <Compile Include="Base\IEProxyHelper.cs" />
     <Compile Include="Base\WebScreenshot.cs" />
+    <Compile Include="Controls\Flyouts\FlyoutConfig.xaml.cs">
+      <DependentUpon>FlyoutConfig.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\IShell.cs" />
     <Compile Include="Wins\WinConfig.xaml.cs">
       <DependentUpon>WinConfig.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Flyouts\FlyoutConfig.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -140,7 +145,9 @@
     <Resource Include="Resources\Entypo.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="FodyWeavers.xml" />
+    <Resource Include="FodyWeavers.xml">
+      <SubType>Designer</SubType>
+    </Resource>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

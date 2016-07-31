@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+        xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
         mc:Ignorable="d"
         Title="OxoBrowser" Height="480" Width="680" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
@@ -20,9 +21,8 @@
 
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button FontFamily="Wingdings" FontSize="20" Content="B" />
-
-            <Button Width="20" Height="20">
+            <!--<Button FontFamily="Wingdings" FontSize="20" Content="B" cal:Message.Attach="[Event Click] = [Action ToggleFlyout(0)]" />-->
+            <Button x:Name="btnTitelConfig" Width="20" Height="20" Click="btnTitelConfig_Click">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_settings}" />
@@ -32,8 +32,20 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
 
+    <Controls:MetroWindow.Flyouts>
+        <Controls:FlyoutsControl x:Name="flyouts">
+            <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="Settings" Position="Right" Margin="100 0 0 0" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}">
+                <OxoBrowser:FlyoutConfig></OxoBrowser:FlyoutConfig>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+    </Controls:MetroWindow.Flyouts>
+
     <Grid>
-        <WebBrowser x:Name="webMain"/>
+        <Grid>
+            <Image x:Name="imageWebMain" />
+            <WebBrowser x:Name="webMain"/>
+        </Grid>
+
 
     </Grid>
 </Controls:MetroWindow>

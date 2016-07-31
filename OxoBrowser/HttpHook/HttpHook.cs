@@ -56,6 +56,7 @@ namespace OxoBrowser
         private static void HttpProxy_AfterSessionComplete(Session obj)
         {
             Task.Run(() => Debug.WriteLine(obj));
+            //执行封包操作
         }
 
         private static void HttpProxy_AfterReadResponseHeaders(HttpResponse obj)
