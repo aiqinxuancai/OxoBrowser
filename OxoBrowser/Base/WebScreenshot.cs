@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 
 
-namespace MinecraftElf.MCWebBrowser
+namespace Base
 {
     class WebScreenshot
     {

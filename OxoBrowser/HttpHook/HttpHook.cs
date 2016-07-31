@@ -55,18 +55,18 @@ namespace OxoBrowser
 
         private static void HttpProxy_AfterSessionComplete(Session obj)
         {
-            Task.Run(() => Debug.WriteLine(obj));
+            //Task.Run(() => Debug.WriteLine(obj));
             //执行封包操作
         }
 
         private static void HttpProxy_AfterReadResponseHeaders(HttpResponse obj)
         {
-            Task.Run(() => Console.WriteLine(obj));
+            //Task.Run(() => Console.WriteLine(obj));
         }
 
         private static void HttpProxy_AfterReadRequestHeaders(HttpRequest obj)
         {
-            Task.Run(() => Console.WriteLine(obj));
+            //Task.Run(() => Console.WriteLine(obj));
         }
 
     }

@@ -1,5 +1,4 @@
 ﻿using MahApps.Metro.Controls;
-using MinecraftElf.MCWebBrowser;
 using OxoBrowser.Controls;
 using System;
 using System.Collections.Generic;
@@ -15,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Base;
 
 namespace OxoBrowser
 {
@@ -36,7 +36,7 @@ namespace OxoBrowser
         private void winMain_Loaded(object sender, RoutedEventArgs e)
         {
             //初始化
-            webMain.Navigate("http://www.dmm.com/");
+            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/");
         }
 
         /// <summary>
@@ -70,9 +70,10 @@ namespace OxoBrowser
                 ToggleFlyout(0);
                 ShowWebImage(true);
             }
-
-
-
+            else
+            {
+                ToggleFlyout(0);
+            }
         }
 
         private void ToggleFlyout(int index)
@@ -82,9 +83,28 @@ namespace OxoBrowser
             {
                 return;
             }
-
             flyout.IsOpen = !flyout.IsOpen;
         }
 
+        private void settingsFlyout_ClosingFinished(object sender, RoutedEventArgs e)
+        {
+            ShowWebImage(false);
+
+        }
+
+        private void btnTitelSound_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void webMain_Navigated(object sender, NavigationEventArgs e)
+        {
+            WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument) webMain.Document);
+        }
+
+        private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
+        {
+            WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
+        }
     }
 }

@@ -24,10 +24,14 @@ namespace OxoBrowser
         /// 程序运行目录
         /// </summary>
         public static string AppPath = "";
+        public static Version SysVersion = null;
+
+        
 
         App() //初始化
         {
             InitAppPath();
+            IEProxyHelper.SetIEUserAgent();
             AppConfig.Init();
             HttpHook.InitNekoxy();
             IEProxyHelper.SetProxy("127.0.0.1:37161");
@@ -44,6 +48,7 @@ namespace OxoBrowser
             }
             AppDataPath = appdata_path;
             AppPath = System.IO.Directory.GetCurrentDirectory();
+            SysVersion = System.Environment.OSVersion.Version;
         }
 
     }
