@@ -7,7 +7,7 @@
         xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
         mc:Ignorable="d"
-        Title="OxoBrowser" Height="480" Width="680" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
+        Title="OxoBrowser" Height="480" Width="800" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
@@ -48,7 +48,8 @@
 
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl x:Name="flyouts">
-            <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="Settings" Position="Right" Margin="200 0 0 0" Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}" ClosingFinished="settingsFlyout_ClosingFinished">
+            <!--Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"-->
+            <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="Settings" Position="Right" Width="300"  ClosingFinished="settingsFlyout_ClosingFinished">
                 <OxoBrowser:FlyoutConfig></OxoBrowser:FlyoutConfig>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

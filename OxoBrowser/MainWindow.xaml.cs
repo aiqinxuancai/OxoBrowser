@@ -35,12 +35,12 @@ namespace OxoBrowser
 
         private void winMain_Loaded(object sender, RoutedEventArgs e)
         {
-            //初始化
-            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/");
+            WebViewConfig.SetWebBrowserSilent(webMain, true);
+            webMain.Navigate("http://www.dmm.com/");
         }
 
         /// <summary>
-        /// 是否将Web显示为图片
+        /// 是否将Web显示为图片 
         /// </summary>
         /// <param name="_show"></param>
         private void ShowWebImage(bool _show)

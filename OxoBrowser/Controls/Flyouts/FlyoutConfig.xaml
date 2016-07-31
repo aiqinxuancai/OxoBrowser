@@ -19,28 +19,22 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="Something above the ScrollPanel" />
-
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel Orientation="Vertical">
-                <TextBox Controls:TextBoxHelper.Watermark="TextBox 01" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 02" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 03" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 04" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 05" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 06" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 07" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 08" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 09" />
-                <TextBox Margin="0,5,0,0" Controls:TextBoxHelper.Watermark="TextBox 10" />
+                <TextBlock Margin="0,5,0,0" Text="设置代理服务器" />
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Controls:TextBoxHelper.Watermark="IP" Width="140"  HorizontalAlignment="Left" />
+                    <TextBox Margin="5,0,0,0" Controls:TextBoxHelper.Watermark="Port" Width="60" />
+                </StackPanel>
+
             </StackPanel>
         </ScrollViewer>
 
         <StackPanel Grid.Row="2"
                     Margin="0,5,0,0"
                     Orientation="Horizontal">
-            <Button Margin="0,0,10,0" Content="create" />
-            <Button Content="cancel" />
+            <Button Margin="0,0,10,0" Content="应用" Width="50" />
+            <Button Content="取消" Width="50" />
         </StackPanel>
 
     </Grid>

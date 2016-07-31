@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using WebBrowser = System.Windows.Controls.WebBrowser;
 using System.Reflection;
 using System.Diagnostics;
+using OxoBrowser;
 
 namespace Base
 {
@@ -14,6 +15,10 @@ namespace Base
     {
         static readonly int OLECMDEXECOPT_DODEFAULT = 0;
         static readonly int OLECMDID_OPTICAL_ZOOM = 63;
+
+        //public static int FlashHeight = 0;
+        //public static int FlashWidth = 0;
+
 
         public static void DisableWebScroll(mshtml.HTMLDocument _doc)
         {
@@ -46,6 +51,7 @@ namespace Base
         {
             try
             {
+                //<div id="flash"><embed width="960" height="580" id="flash_object" src="http://static.touken-ranbu.jp/client.swf?v=368" type="application/x-shockwave-flash" wmode="opaque" allowScriptAccess="always" allowFullScreen="true" FlashVars="url=http://w004.touken-ranbu.jp&amp;url_static=http://static.touken-ranbu.jp&amp;user_id=396521&amp;tutorial=71106559&amp;cookie_name=sword&amp;cookie_value=h66couimgjcj75jvrsjm8783e7&amp;config=config_prod-sys&amp;t=07d6e1f09e7cb05298a01212e46ff2c2b6d2830d0faa98a126535bfe8994f7e3e1b5bede21888ece505196320f17527f97bb5b9e7bbd175646352a55d0ef1ee5" base="http://static.touken-ranbu.jp/"></div>
 
                 System.Drawing.PointF scaleUI = ToukenBrowser.WebBrowserZoomInvoker.GetCurrentDIPScale();
                 if (100 != (int)(scaleUI.X * 100))
@@ -85,7 +91,7 @@ namespace Base
             }
             catch (System.Exception ex)
             {
-                //ToukenBrowser.LogClass.WriteErrorLog("SetZoom:" + ex.ToString());
+                Debug.WriteLine(ex);
             }
         }
 
@@ -113,6 +119,49 @@ namespace Base
 
         }
 
+        public static mshtml.IHTMLElement GetFlashObjectFromGameFrame(mshtml.IHTMLElement _gameFrame)
+        {
+            try
+            {
+                mshtml.HTMLDocument gameFrameDoc = _gameFrame.document;
+                var frm = gameFrameDoc.frames;
+                for (int i = 0; i < frm.length; i++)
+                {
+                    mshtml.IHTMLWindow2 item = (mshtml.IHTMLWindow2)frm.item(i);
+                    mshtml.IHTMLDocument2 doc = CodecentrixSample.CrossFrameIE.GetDocumentFromWindow(item); //跨域读取 否则没有权限
+                    string text = doc.activeElement.innerHTML != null ? doc.activeElement.innerHTML : "";
+                    if (text != null && text.Contains("div id=\"flash\""))
+                    {
+                        foreach (mshtml.IHTMLElement obj in doc.all)
+                        {
+                            if (obj.id != null && obj.id == "contents")
+                            {
+                                foreach (mshtml.IHTMLElement objContents in obj.all)
+                                {
+                                    if (objContents.id != null && objContents.id == "flash")
+                                    {
+                                        foreach (mshtml.IHTMLElement objFlash in objContents.all)
+                                        {
+                                            if (objFlash.id != null && objFlash.id == "flash_object")
+                                            {
+                                                return objFlash;
+                                            }
+                                        }
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.WriteLine(ex);
+                return null;
+            }
+        }
 
         public static void ApplyStyleSheet(mshtml.HTMLDocument _doc)
         {
@@ -121,69 +170,32 @@ namespace Base
                 System.Diagnostics.Debug.WriteLine("ApplyStyleSheet");
                 var document = _doc;
                 if (document == null) return;
-                
+
                 var gameFrame = document.getElementById("game_frame");
-                mshtml.HTMLDocument gameFrameDoc = gameFrame.document;
-                //foreach (mshtml.IHTMLElement item in )
-                //{
-                //    if (item.outerHTML.Contains("flash"))
-                //    {
-                //        Debug.WriteLine(item.outerHTML);
-                //    }
-                //}
 
-                var frm = gameFrameDoc.frames;
-                for (int i = 0; i < frm.length; i++)
+                mshtml.IHTMLElement flashObject = GetFlashObjectFromGameFrame(gameFrame);
+
+                //
+
+                
+
+                if (flashObject != null)
                 {
-                    mshtml.IHTMLWindow2 item = (mshtml.IHTMLWindow2)frm.item(i);
-                    mshtml.IHTMLDocument2 doc = CodecentrixSample.CrossFrameIE.GetDocumentFromWindow(item);
-                    string text = doc.activeElement.innerHTML;
-                    if (text != null && text.Contains("div id=\"flash\""))
-                    {
-                        Debug.WriteLine("---------------------------");
-                        Debug.WriteLine(text);
-                        int start = text.IndexOf("div id=\"flash\"");
-                        int start2 = text.IndexOf("embed", start);
+                    //读取宽高
 
 
-
-
-                    }
+                    MainWindow.thisFrm.Width = flashObject.offsetWidth;
+                    MainWindow.thisFrm.Height = flashObject.offsetHeight + MainWindow.thisFrm.TitlebarHeight;
                 }
 
-                
 
-                //mshtml.HTMLDocument gameFrameDoc = gameFrame.document;
-                //mshtml.IHTMLFramesCollection2 frames = (mshtml.IHTMLFramesCollection2)gameFrameDoc.frames;
-
-
-                //foreach (mshtml.IHTMLElement item in gameFrameDoc.all)
-                //{
-                //    if (item.outerHTML.Contains("flash"))
-                //    {
-                //        Debug.WriteLine(item.outerHTML);
-                //    }
-                //}
-
-                //foreach (mshtml.IHTMLElement item in gameFrame.all)
-                //{
-                //    if (item.outerHTML.Contains("flash"))
-                //    {
-                //        Debug.WriteLine(item.outerHTML);
-                //    }
-                //}
-
-
-
-                //var flashFrame = gameFrameDoc.getElementById("flash_object"); 
-
-                //if (gameFrame == null)
-                //{
-                //    if (document.url.Contains(".swf?"))
-                //    {
-                //        gameFrame = document.body;
-                //    }
-                //}
+                if (gameFrame == null)
+                {
+                    if (document.url.Contains(".swf?"))
+                    {
+                        gameFrame = document.body;
+                    }
+                }
 
                 if (gameFrame != null)
                 {
@@ -201,7 +213,6 @@ namespace Base
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-                //ToukenBrowser.LogClass.WriteErrorLog(ex.ToString());
             }
             return;
         }
@@ -252,6 +263,8 @@ namespace Base
 
 
         }
+
+
 
     }
 }
