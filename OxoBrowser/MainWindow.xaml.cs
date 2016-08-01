@@ -35,9 +35,17 @@ namespace OxoBrowser
 
         private void winMain_Loaded(object sender, RoutedEventArgs e)
         {
+            InitUI();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
             webMain.Navigate("http://www.dmm.com/");
         }
+
+        private void InitUI()
+        {
+            this.flyoutConfig.textConfigIP.Text = AppConfig.m_config.ProxyIP;
+            this.flyoutConfig.textConfigPort.Text = AppConfig.m_config.ProxyPort;
+        }
+
 
         /// <summary>
         /// 是否将Web显示为图片 
@@ -76,7 +84,7 @@ namespace OxoBrowser
             }
         }
 
-        private void ToggleFlyout(int index)
+        public void ToggleFlyout(int index)
         {
             var flyout = this.flyouts.Items[index] as Flyout;
             if (flyout == null)

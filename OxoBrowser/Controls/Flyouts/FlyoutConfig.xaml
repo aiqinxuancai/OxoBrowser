@@ -23,8 +23,8 @@
             <StackPanel Orientation="Vertical">
                 <TextBlock Margin="0,5,0,0" Text="设置代理服务器" />
                 <StackPanel Orientation="Horizontal">
-                    <TextBox Controls:TextBoxHelper.Watermark="IP" Width="140"  HorizontalAlignment="Left" />
-                    <TextBox Margin="5,0,0,0" Controls:TextBoxHelper.Watermark="Port" Width="60" />
+                    <TextBox x:Name="textConfigIP" Controls:TextBoxHelper.Watermark="IP" Width="140"  HorizontalAlignment="Left" />
+                    <TextBox x:Name="textConfigPort" Margin="5,0,0,0" Controls:TextBoxHelper.Watermark="Port" Width="60" />
                 </StackPanel>
 
             </StackPanel>
@@ -33,8 +33,7 @@
         <StackPanel Grid.Row="2"
                     Margin="0,5,0,0"
                     Orientation="Horizontal">
-            <Button Margin="0,0,10,0" Content="应用" Width="50" />
-            <Button Content="取消" Width="50" />
+            <Button x:Name="btnApply" Margin="0,0,10,0" Content="应用" Width="50" Click="btnApply_Click" />
         </StackPanel>
 
     </Grid>

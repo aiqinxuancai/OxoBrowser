@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Base;
 
 namespace OxoBrowser.Controls.Flyouts
 {
@@ -24,5 +25,19 @@ namespace OxoBrowser.Controls.Flyouts
         {
             InitializeComponent();
         }
+
+        //应用
+        private void btnApply_Click(object sender, RoutedEventArgs e)
+        {
+            if (textConfigIP.Text != AppConfig.m_config.ProxyIP || textConfigPort.Text != AppConfig.m_config.ProxyPort)
+            {
+                AppConfig.m_config.ProxyIP = textConfigIP.Text;
+                AppConfig.m_config.ProxyPort = textConfigPort.Text;
+                HttpHook.ReLoadNekoxy();//重置代理
+            }
+            //应用后关闭
+            MainWindow.thisFrm.ToggleFlyout(0); //关闭Flyout
+        }
+
     }
 }
