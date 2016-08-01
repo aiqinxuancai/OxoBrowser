@@ -119,7 +119,7 @@ namespace Base
 
         }
 
-        public static mshtml.IHTMLElement GetFlashObjectFromGameFrame(mshtml.IHTMLElement _gameFrame)
+        public static mshtml.IHTMLElement GetFlashObjectFromGameFrame(mshtml.IHTMLElement _gameFrame,out string _firstFrame)
         {
             try
             {
@@ -130,41 +130,66 @@ namespace Base
                     mshtml.IHTMLWindow2 item = (mshtml.IHTMLWindow2)frm.item(i);
                     mshtml.IHTMLDocument2 doc = CodecentrixSample.CrossFrameIE.GetDocumentFromWindow(item); //跨域读取 否则没有权限
                     string text = doc.activeElement.innerHTML != null ? doc.activeElement.innerHTML : "";
-                    if (text != null && text.Contains("div id=\"flash\""))
+                    if (text != null && text.Contains("type=\"application/x-shockwave-flash\"")) // //div id=\"flash\"
                     {
+                        _firstFrame = text;
                         foreach (mshtml.IHTMLElement obj in doc.all)
                         {
-                            if (obj.id != null && obj.id == "contents")
+                            string textObj = obj.innerHTML != null ? obj.innerHTML : "";
+                            if (textObj != null && textObj.Contains("type=\"application/x-shockwave-flash\""))
                             {
                                 foreach (mshtml.IHTMLElement objContents in obj.all)
                                 {
-                                    if (objContents.id != null && objContents.id == "flash")
+                                    string textObjContents = objContents.innerHTML != null ? objContents.innerHTML : "";
+                                    if (textObjContents != null && textObjContents.Contains("type=\"application/x-shockwave-flash\""))
                                     {
                                         foreach (mshtml.IHTMLElement objFlash in objContents.all)
                                         {
-                                            if (objFlash.id != null && objFlash.id == "flash_object")
+                                            string textObjFlash = objFlash.innerHTML != null ? objFlash.innerHTML : "";
+                                            if (textObjFlash != null && textObjFlash.Contains("type=\"application/x-shockwave-flash\""))
                                             {
                                                 return objFlash;
                                             }
                                         }
-
                                     }
                                 }
                             }
                         }
                     }
                 }
+                _firstFrame = "";
                 return null;
             }
             catch (System.Exception ex)
             {
                 Debug.WriteLine(ex);
+                _firstFrame = "";
                 return null;
             }
         }
 
+        public static void RegexGetWidthAndHeight(string _str, out int _width, out int _height)
+        {
+            Regex regWidth = new Regex("width=\\\"(\\d+)\\\"");
+            Regex regHeight = new Regex("height=\\\"(\\d+)\\\"");
+
+            string w = regWidth.Match(_str).Groups[1].Value;
+            string h = regHeight.Match(_str).Groups[1].Value;
+
+            if (!string.IsNullOrWhiteSpace(w) && !string.IsNullOrWhiteSpace(h))
+            {
+                _width = int.Parse(w);
+                _height = int.Parse(h);
+                return;
+            }
+            _width = 0;
+            _height = 0;
+            return;
+        }
+
         public static void ApplyStyleSheet(mshtml.HTMLDocument _doc)
         {
+            
             try
             {
                 System.Diagnostics.Debug.WriteLine("ApplyStyleSheet");
@@ -173,19 +198,31 @@ namespace Base
 
                 var gameFrame = document.getElementById("game_frame");
 
-                mshtml.IHTMLElement flashObject = GetFlashObjectFromGameFrame(gameFrame);
-
-                //
-
-                
+                var firstFrame = "";
+                mshtml.IHTMLElement flashObject = GetFlashObjectFromGameFrame(gameFrame, out firstFrame);
 
                 if (flashObject != null)
                 {
                     //读取宽高
-
-
-                    MainWindow.thisFrm.Width = flashObject.offsetWidth;
-                    MainWindow.thisFrm.Height = flashObject.offsetHeight + MainWindow.thisFrm.TitlebarHeight;
+                    string html = flashObject.innerHTML;
+                    int w, h;
+                    RegexGetWidthAndHeight(html, out w,out h);
+                    if (w == 0 && h == 0)
+                    {
+                        RegexGetWidthAndHeight(firstFrame, out w, out h);
+                    }
+                    
+                    if (w != 0 && h != 0)
+                    {
+                        //如果宽高都不为空
+                        MainWindow.thisFrm.Width = w;
+                        MainWindow.thisFrm.Height = h + MainWindow.thisFrm.TitlebarHeight;
+                    }
+                    else
+                    {
+                        MainWindow.thisFrm.Width = flashObject.offsetWidth;
+                        MainWindow.thisFrm.Height = flashObject.offsetHeight + MainWindow.thisFrm.TitlebarHeight;
+                    }
                 }
 
 

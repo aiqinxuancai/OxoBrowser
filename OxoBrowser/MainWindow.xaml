@@ -58,7 +58,7 @@
     <Grid>
         <Grid>
             <Image x:Name="imageWebMain" />
-            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated"/>
+            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating"/>
         </Grid>
 
 

@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Base;
+using System.Diagnostics;
 
 namespace OxoBrowser
 {
@@ -37,7 +38,8 @@ namespace OxoBrowser
         {
             InitUI();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
-            webMain.Navigate("http://www.dmm.com/");
+            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=738496/"); //花骑士
+            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
         }
 
         private void InitUI()
@@ -113,6 +115,11 @@ namespace OxoBrowser
         private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
         {
             WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
+        }
+
+        private void webMain_Navigating(object sender, NavigatingCancelEventArgs e)
+        {
+            Debug.WriteLine(e.Uri.ToString());
         }
     }
 }
