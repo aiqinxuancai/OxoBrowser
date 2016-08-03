@@ -15,6 +15,10 @@ namespace Base
     {
         public string ProxyIP { get; set; }
         public string ProxyPort { get; set; }
+        public bool SoundClose { get; set; }
+        public string WebSize { get; set; }
+        public int FlashWidth { get; set; }
+        public int FlashHeight { get; set; }
     }
 
     /// <summary>
@@ -30,6 +34,10 @@ namespace Base
         {
             m_config.ProxyIP = "";
             m_config.ProxyPort = "";
+            m_config.SoundClose = false;
+            m_config.WebSize = "100%";
+            m_config.FlashWidth = 0;
+            m_config.FlashHeight = 0;
         }
 
         public static bool Init()
@@ -58,6 +66,8 @@ namespace Base
         {
             try
             {
+                m_config.FlashHeight = 0;
+                m_config.FlashWidth = 0;
                 System.IO.File.WriteAllText(m_config_path, JsonConvert.SerializeObject(m_config));
             }
             catch (System.Exception ex)

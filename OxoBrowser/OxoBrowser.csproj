@@ -82,6 +82,7 @@
     <Compile Include="Base\CrossFrameIE.cs" />
     <Compile Include="Base\IEProxy.cs" />
     <Compile Include="Base\IEProxyHelper.cs" />
+    <Compile Include="Base\SoundSetting.cs" />
     <Compile Include="Base\WebBrowserZoomInvoker.cs" />
     <Compile Include="Base\WebScreenshot.cs" />
     <Compile Include="Base\WebViewConfig.cs" />
@@ -99,6 +100,10 @@
     <Page Include="Controls\Icons.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MetroColor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

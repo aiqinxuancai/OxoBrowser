@@ -7,7 +7,7 @@
         xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
         mc:Ignorable="d"
-        Title="OxoBrowser" Height="480" Width="800" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
+        Title="OxoBrowser" Height="600" Width="900" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
@@ -22,21 +22,48 @@
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <!--<Button FontFamily="Wingdings" FontSize="20" Content="B" cal:Message.Attach="[Event Click] = [Action ToggleFlyout(0)]" />-->
-            <Button x:Name="btnTitelFlashMin" Width="20" Height="20" Click="btnTitelFlashMin_Click">
+            <Button x:Name="btnTitelWindowSize" Content="100%" Click="btnTitelWindowSize_Click" >
+                <Button.ContextMenu>
+                    <ContextMenu x:Name="menuGameSize">
+                        <MenuItem Header="200%" Click="menuGameSize_Click" />
+                        <MenuItem Header="175%" Click="menuGameSize_Click"  />
+                        <MenuItem Header="150%" Click="menuGameSize_Click"  />
+                        <MenuItem Header="125%" Click="menuGameSize_Click"  />
+                        <MenuItem Header="100%" Click="menuGameSize_Click"  />
+                        <MenuItem Header="75%" Click="menuGameSize_Click"  />
+                        <MenuItem Header="50%" Click="menuGameSize_Click"  />
+                    </ContextMenu>
+                </Button.ContextMenu>
+            </Button>
+            <ToggleButton x:Name="btnTitelWindowTop" Width="20" Height="20" Checked="btnTitelWindowTop_Checked" Unchecked="btnTitelWindowTop_Unchecked" ToolTip="窗口置顶">
+                <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_layer_arrange_solid_bringtofront}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
+            <Button x:Name="btnTitelFlashMin" Width="20" Height="20" Click="btnTitelFlashMin_Click" ToolTip="提取Flash">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_fullscreen_box}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <Button x:Name="btnTitelSound" Width="20" Height="20" Click="btnTitelSound_Click">
-                <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+            <Button x:Name="btnTitelSound" Width="20" Height="20" Click="btnTitelSound_Click" ToolTip="关闭声音">
+                <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_3}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <Button x:Name="btnTitelConfig" Width="20" Height="20" Click="btnTitelConfig_Click">
+            <Button x:Name="btnTitelSoundClose" Width="20" Height="20" Click="btnTitelSoundClose_Click" Visibility="Collapsed" ToolTip="打开声音">
+                <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_mute}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button x:Name="btnTitelConfig" Width="20" Height="20" Click="btnTitelConfig_Click" ToolTip="设置">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_settings}" />
@@ -49,7 +76,7 @@
     <Controls:MetroWindow.Flyouts>
         <Controls:FlyoutsControl x:Name="flyouts">
             <!--Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"-->
-            <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="Settings" Position="Right" Width="300"  ClosingFinished="settingsFlyout_ClosingFinished">
+            <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="设置" Position="Right" Width="300"  ClosingFinished="settingsFlyout_ClosingFinished">
                 <OxoBrowser:FlyoutConfig x:Name="flyoutConfig"></OxoBrowser:FlyoutConfig>
             </Controls:Flyout>
         </Controls:FlyoutsControl>

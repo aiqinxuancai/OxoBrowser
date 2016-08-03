@@ -53,7 +53,7 @@ namespace Base
             {
                 //<div id="flash"><embed width="960" height="580" id="flash_object" src="http://static.touken-ranbu.jp/client.swf?v=368" type="application/x-shockwave-flash" wmode="opaque" allowScriptAccess="always" allowFullScreen="true" FlashVars="url=http://w004.touken-ranbu.jp&amp;url_static=http://static.touken-ranbu.jp&amp;user_id=396521&amp;tutorial=71106559&amp;cookie_name=sword&amp;cookie_value=h66couimgjcj75jvrsjm8783e7&amp;config=config_prod-sys&amp;t=07d6e1f09e7cb05298a01212e46ff2c2b6d2830d0faa98a126535bfe8994f7e3e1b5bede21888ece505196320f17527f97bb5b9e7bbd175646352a55d0ef1ee5" base="http://static.touken-ranbu.jp/"></div>
 
-                System.Drawing.PointF scaleUI = ToukenBrowser.WebBrowserZoomInvoker.GetCurrentDIPScale();
+                System.Drawing.PointF scaleUI = WebBrowserZoomInvoker.GetCurrentDIPScale();
                 if (100 != (int)(scaleUI.X * 100))
                 {
                     //SetZoom(browser, (int)(scaleUI.X * scaleUI.Y * 100));
@@ -180,6 +180,8 @@ namespace Base
             {
                 _width = int.Parse(w);
                 _height = int.Parse(h);
+                AppConfig.m_config.FlashWidth = _width;
+                AppConfig.m_config.FlashHeight = _height;
                 return;
             }
             _width = 0;
@@ -189,7 +191,6 @@ namespace Base
 
         public static void ApplyStyleSheet(mshtml.HTMLDocument _doc)
         {
-            
             try
             {
                 System.Diagnostics.Debug.WriteLine("ApplyStyleSheet");
