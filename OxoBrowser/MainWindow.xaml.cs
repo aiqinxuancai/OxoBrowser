@@ -41,8 +41,8 @@ namespace OxoBrowser
             UpdataSoundButton();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
             WebBrowserZoomInvoker.AddZoomInvoker(webMain);
-            webMain.Navigate("http://www.dmm.com/netgame/feature/icchibanketu.html"); //花骑士
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
+            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
+            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //刀剑
         }
 
         private void InitUI()
