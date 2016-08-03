@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 using Base;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
+using System.Reflection;
 
 namespace OxoBrowser
 {
@@ -122,26 +123,16 @@ namespace OxoBrowser
                 AppConfig.m_config.WebSize = sizeString;
                 AppConfig.Save();
                 this.btnTitelWindowSize.Content = sizeString;
-
                 int SizeNew = int.Parse(sizeString.Replace("%", ""));
 
-                //UpdataWindowSize(SizeNew);
-
-                if (SizeNew != 100)
-                {
-                    //SetTimerWebSite();
-                }
-
-                System.Windows.Forms.Screen screen_ = System.Windows.Forms.Screen.PrimaryScreen;
-
-                if (winMain.MinWidth > screen_.Bounds.Width | webMain.Height + 100 > screen_.Bounds.Height)
+                UpdataWindowSize(SizeNew);
+                System.Windows.Forms.Screen screenSize = System.Windows.Forms.Screen.PrimaryScreen;
+                if (winMain.MinWidth > screenSize.Bounds.Width | webMain.Height + 100 > screenSize.Bounds.Height)
                 {
                     MessageBox.Show("你设置的尺寸超出了屏幕的大小！还原回100%！", "ERROR");
-                    //UpdataWindowSize(100);
-
                     if (SizeNew != 100)
                     {
-                        //SetTimerWebSite();
+
                     }
                     winMain.Height = webMain.Height + 30;
                     winMain.Width = winMain.MinWidth;
@@ -158,28 +149,72 @@ namespace OxoBrowser
             }
         }
 
-        //private void UpdataWindowSize(double _site)
-        //{
-        //    double old_height = 580;
-        //    double old_width = 960;
-        //    double height_min = 75;
 
-        //    double __site = _site / 100; // + dpi_site
-        //    Debug.WriteLine(__site);
+        static readonly int OLECMDEXECOPT_DODEFAULT = 0;
+        static readonly int OLECMDID_OPTICAL_ZOOM = 63;
 
-        //    SetZoom(webMain, (int)_site);//+ dpi_site * 100
+        static void SetZoom(WebBrowser webbrowser, int zoom)
+        {
+            try
+            {
+                System.Drawing.PointF scaleUI = WebBrowserZoomInvoker.GetCurrentDIPScale();
+                if (100 != (int)(scaleUI.X * 100))
+                {
+                    zoom = (int)(scaleUI.X * scaleUI.Y * zoom);
+                }
+                if (null == webbrowser)
+                {
+                    return;
+                }
 
-        //    webMain.Height = old_height * (__site);
-        //    webMain.Width = old_width * (__site);
+                FieldInfo fiComWebBrowser = webbrowser.GetType().GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+                if (null != fiComWebBrowser)
+                {
+                    Object objComWebBrowser = fiComWebBrowser.GetValue(webbrowser);
 
-        //    winMain.MinHeight = webMain.Height + height_min;
-        //    winMain.MinWidth = old_width * __site;
+                    if (null != objComWebBrowser)
+                    {
+                        object[] args = new object[]
+                            {
+                            OLECMDID_OPTICAL_ZOOM,
+                            OLECMDEXECOPT_DODEFAULT,
+                            zoom,
+                            IntPtr.Zero
+                            };
+                        objComWebBrowser.GetType().InvokeMember(
+                        "ExecWB",
+                        BindingFlags.InvokeMethod,
+                        null, objComWebBrowser,
+                        args);
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+            }
+        }
 
-        //    if (_site != 100)
-        //    {
-        //        SetTimerWebSite();
-        //    }
-        //}
+        private void UpdataWindowSize(double _site)
+        {
+            double __site = _site / 100; // + dpi_site
+            Debug.WriteLine(__site);
+
+            SetZoom(webMain, (int)_site);//+ dpi_site * 100
+
+            
+            double h = Convert.ToDouble(AppConfig.m_config.FlashHeight);
+            double w = Convert.ToDouble(AppConfig.m_config.FlashWidth);
+            webMain.Height = h * (__site);
+            webMain.Width = w * (__site);
+
+            winMain.MinHeight = webMain.Height;
+            winMain.MinWidth = webMain.Width;
+
+            if (_site != 100)
+            {
+                //SetTimerWebSite();
+            }
+        }
 
         public void ToggleFlyout(int index)
         {

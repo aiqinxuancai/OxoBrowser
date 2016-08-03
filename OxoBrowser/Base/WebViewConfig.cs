@@ -180,8 +180,7 @@ namespace Base
             {
                 _width = int.Parse(w);
                 _height = int.Parse(h);
-                AppConfig.m_config.FlashWidth = _width;
-                AppConfig.m_config.FlashHeight = _height;
+
                 return;
             }
             _width = 0;
@@ -218,11 +217,15 @@ namespace Base
                         //如果宽高都不为空
                         MainWindow.thisFrm.Width = w;
                         MainWindow.thisFrm.Height = h + MainWindow.thisFrm.TitlebarHeight;
+                        AppConfig.m_config.FlashWidth = Convert.ToInt32(MainWindow.thisFrm.Width) ;
+                        AppConfig.m_config.FlashHeight = Convert.ToInt32(MainWindow.thisFrm.Height);
                     }
                     else
                     {
                         MainWindow.thisFrm.Width = flashObject.offsetWidth;
                         MainWindow.thisFrm.Height = flashObject.offsetHeight + MainWindow.thisFrm.TitlebarHeight;
+                        AppConfig.m_config.FlashWidth = Convert.ToInt32(MainWindow.thisFrm.Width);
+                        AppConfig.m_config.FlashHeight = Convert.ToInt32(MainWindow.thisFrm.Height);
                     }
                 }
 

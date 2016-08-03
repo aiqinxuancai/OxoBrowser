@@ -51,6 +51,8 @@ namespace Base
                     return false;
                 }
                 m_config = JsonConvert.DeserializeObject<AppConfigData>(System.IO.File.ReadAllText(m_config_path));
+                m_config.FlashHeight = 0;
+                m_config.FlashWidth = 0;
                 return true;
             }
             catch (System.Exception ex)
@@ -66,8 +68,7 @@ namespace Base
         {
             try
             {
-                m_config.FlashHeight = 0;
-                m_config.FlashWidth = 0;
+
                 System.IO.File.WriteAllText(m_config_path, JsonConvert.SerializeObject(m_config));
             }
             catch (System.Exception ex)
