@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -26,12 +27,14 @@ namespace OxoBrowser
         public static string AppPath = "";
         public static Version SysVersion = null;
 
-        
+        public static string AppName = "";
 
         App() //初始化
         {
             InitAppPath();
-            IEProxyHelper.SetIEUserAgent();
+            //IEProxyHelper.SetIEUserAgent();
+            IEProxyHelper.SetIE11KeyforWebBrowserControl(AppName);
+            IEProxyHelper.SetGPUKeyforWebBrowserControl(AppName);
             AppConfig.Init();
             HttpHook.InitNekoxy();
             IEProxyHelper.SetProxy("127.0.0.1:37161");
@@ -49,6 +52,7 @@ namespace OxoBrowser
             AppDataPath = appdata_path;
             AppPath = System.IO.Directory.GetCurrentDirectory();
             SysVersion = System.Environment.OSVersion.Version;
+            AppName = Process.GetCurrentProcess().ProcessName + ".exe";
         }
 
     }

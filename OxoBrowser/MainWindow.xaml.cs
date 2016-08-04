@@ -42,7 +42,9 @@ namespace OxoBrowser
             WebViewConfig.SetWebBrowserSilent(webMain, true);
             WebBrowserZoomInvoker.AddZoomInvoker(webMain);
             webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //刀剑
+                                                                                              //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //刀剑
+            //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
+        
         }
 
         private void InitUI()
