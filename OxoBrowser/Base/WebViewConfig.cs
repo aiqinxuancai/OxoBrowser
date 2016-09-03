@@ -228,6 +228,23 @@ namespace Base
                         AppConfig.m_config.FlashHeight = Convert.ToInt32(MainWindow.thisFrm.Height);
                     }
                 }
+                else
+                {
+                    if (!String.IsNullOrWhiteSpace(firstFrame))
+                    {
+                        int w, h;
+                        RegexGetWidthAndHeight(firstFrame, out w, out h);
+                        if (w == 0 && h == 0)
+                        {
+                            MainWindow.thisFrm.Width = flashObject.offsetWidth;
+                            MainWindow.thisFrm.Height = flashObject.offsetHeight + MainWindow.thisFrm.TitlebarHeight;
+                            AppConfig.m_config.FlashWidth = Convert.ToInt32(MainWindow.thisFrm.Width);
+                            AppConfig.m_config.FlashHeight = Convert.ToInt32(MainWindow.thisFrm.Height);
+                        }
+
+                    }
+
+                }
 
 
                 if (gameFrame == null)

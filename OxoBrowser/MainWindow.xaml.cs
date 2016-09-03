@@ -41,10 +41,10 @@ namespace OxoBrowser
             UpdataSoundButton();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
             WebBrowserZoomInvoker.AddZoomInvoker(webMain);
-            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
-                                                                                              //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //刀剑
+            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
+            webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
             //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
-        
+
         }
 
         private void InitUI()
@@ -134,14 +134,14 @@ namespace OxoBrowser
                     MessageBox.Show("你设置的尺寸超出了屏幕的大小！还原回100%！", "ERROR");
                     if (SizeNew != 100)
                     {
-
+                        UpdataWindowSize(100);
                     }
-                    winMain.Height = webMain.Height + 30;
+                    winMain.Height = webMain.Height ; //+30
                     winMain.Width = winMain.MinWidth;
                 }
                 else
                 {
-                    winMain.Height = webMain.Height + 30;
+                    winMain.Height = webMain.Height ; //+30
                     winMain.Width = winMain.MinWidth;
                 }
             }
