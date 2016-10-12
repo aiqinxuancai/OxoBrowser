@@ -7,7 +7,7 @@
         xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
         mc:Ignorable="d"
-        Title="OxoBrowser" Height="600" Width="900" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen">
+        Title="OxoBrowser" Height="600" Width="900" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
