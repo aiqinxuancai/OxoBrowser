@@ -128,7 +128,7 @@ namespace OxoBrowser
                 int SizeNew = int.Parse(sizeString.Replace("%", ""));
 
                 UpdataWindowSize(SizeNew);
-                System.Windows.Forms.Screen screenSize = System.Windows.Forms.Screen.PrimaryScreen;
+                System.Windows.Forms.Screen screenSize = System.Windows.Forms.Screen.FromHandle(webMain.Handle);
                 if (winMain.MinWidth > screenSize.Bounds.Width | webMain.Height + 100 > screenSize.Bounds.Height)
                 {
                     MessageBox.Show("你设置的尺寸超出了屏幕的大小！还原回100%！", "ERROR");
