@@ -30,7 +30,7 @@ namespace OxoBrowser
         }
 
         //NekoxyHook
-        public static void InitNekoxy()
+        public static void InitNekoxy() //使用Nekoxy库来处理封包
         {
             ReLoadNekoxy();
             HttpProxy.AfterReadRequestHeaders += HttpProxy_AfterReadRequestHeaders;
@@ -49,10 +49,11 @@ namespace OxoBrowser
             {
                 HttpProxy.UpstreamProxyConfig = new ProxyConfig(ProxyConfigType.SpecificProxy, AppConfig.m_config.ProxyIP, int.Parse(AppConfig.m_config.ProxyPort));
             }
-            
+            //这里要做一下循环的Try，以免中转端口被占用
             HttpProxy.Startup(37161, false, false);
         }
 
+        
         private static void HttpProxy_AfterSessionComplete(Session obj)
         {
             //Task.Run(() => Debug.WriteLine(obj));
