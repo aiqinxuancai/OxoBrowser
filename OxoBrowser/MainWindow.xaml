@@ -6,6 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
+        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
         Title="OxoBrowser" Height="600" Width="900" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
 
@@ -86,6 +87,7 @@
         <Grid>
             <Image x:Name="imageWebMain" />
             <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating"/>
+            <!--<cefSharp:ChromiumWebBrowser x:Name="webMainChrome" Address="https://github.com/cefsharp/CefSharp/wiki/Frequently-asked-questions" />-->
         </Grid>
 
 
