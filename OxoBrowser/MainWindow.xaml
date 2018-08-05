@@ -36,35 +36,35 @@
                     </ContextMenu>
                 </Button.ContextMenu>
             </Button>
-            <ToggleButton x:Name="btnTitelWindowTop" Width="20" Height="20" Checked="btnTitelWindowTop_Checked" Unchecked="btnTitelWindowTop_Unchecked" ToolTip="窗口置顶">
+            <ToggleButton x:Name="btnTitelWindowTop" Checked="btnTitelWindowTop_Checked" Unchecked="btnTitelWindowTop_Unchecked" ToolTip="窗口置顶">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_layer_arrange_solid_bringtofront}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </ToggleButton>
-            <Button x:Name="btnTitelFlashMin" Width="20" Height="20" Click="btnTitelFlashMin_Click" ToolTip="提取Flash">
+            <Button x:Name="btnTitelFlashMin"  Click="btnTitelFlashMin_Click" ToolTip="提取Flash">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_fullscreen_box}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <Button x:Name="btnTitelSound" Width="20" Height="20" Click="btnTitelSound_Click" ToolTip="关闭声音">
+            <Button x:Name="btnTitelSound"  Click="btnTitelSound_Click" ToolTip="关闭声音">
                 <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_3}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <Button x:Name="btnTitelSoundClose" Width="20" Height="20" Click="btnTitelSoundClose_Click" Visibility="Collapsed" ToolTip="打开声音">
+            <Button x:Name="btnTitelSoundClose"  Click="btnTitelSoundClose_Click" Visibility="Collapsed" ToolTip="打开声音">
                 <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_mute}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <Button x:Name="btnTitelConfig" Width="20" Height="20" Click="btnTitelConfig_Click" ToolTip="设置">
+            <Button x:Name="btnTitelConfig"  Click="btnTitelConfig_Click" ToolTip="设置">
                 <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_settings}" />
