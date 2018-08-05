@@ -19,6 +19,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
 using System.IO;
+using CefSharp;
 
 namespace OxoBrowser
 {
@@ -28,6 +29,8 @@ namespace OxoBrowser
     public partial class MainWindow : MetroWindow
     {
         public static MainWindow thisFrm;
+
+        private static readonly bool DebuggingSubProcess = Debugger.IsAttached;
 
         public MainWindow()
         {
@@ -45,7 +48,7 @@ namespace OxoBrowser
             //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
             //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
             //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
-
+            //Cef.Shutdown();
 
             webMain.Visibility = Visibility.Hidden;
 
@@ -54,8 +57,9 @@ namespace OxoBrowser
                 CachePath = Directory.GetCurrentDirectory() + @"\Cache",
             };
 
+            //setting.RemoteDebuggingPort = 8088;
             setting.Locale = "zh-CN";
-            setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
+            //setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
             setting.CefCommandLineArgs.Add("enable-npapi", "1");
             setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:1080");
             //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
@@ -78,7 +82,14 @@ namespace OxoBrowser
             setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
 
 
-            CefSharp.Cef.Initialize(setting);
+            //CefSharp.Cef.Initialize(setting);
+
+            if (!Cef.Initialize(setting))
+            {
+                throw new Exception("Unable to Initialize Cef");
+            }
+
+            CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
 
 
 
@@ -87,7 +98,6 @@ namespace OxoBrowser
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=798209/";
-
         }
 
         private void InitUI()
