@@ -97,7 +97,13 @@ namespace OxoBrowser
             this.Content = chromeMain;
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://html5test.com/";
+            chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=798209/";
+        }
+
+        private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+            Debug.WriteLine("FrameLoadEnd " + e.Url);
         }
 
         private void InitUI()
@@ -208,53 +214,53 @@ namespace OxoBrowser
         static readonly int OLECMDEXECOPT_DODEFAULT = 0;
         static readonly int OLECMDID_OPTICAL_ZOOM = 63;
 
-        static void SetZoom(WebBrowser webbrowser, int zoom)
-        {
-            try
-            {
-                System.Drawing.PointF scaleUI = WebBrowserZoomInvoker.GetCurrentDIPScale();
-                if (100 != (int)(scaleUI.X * 100))
-                {
-                    zoom = (int)(scaleUI.X * scaleUI.Y * zoom);
-                }
-                if (null == webbrowser)
-                {
-                    return;
-                }
+        //static void SetZoom(WebBrowser webbrowser, int zoom)
+        //{
+        //    try
+        //    {
+        //        System.Drawing.PointF scaleUI = WebBrowserZoomInvoker.GetCurrentDIPScale();
+        //        if (100 != (int)(scaleUI.X * 100))
+        //        {
+        //            zoom = (int)(scaleUI.X * scaleUI.Y * zoom);
+        //        }
+        //        if (null == webbrowser)
+        //        {
+        //            return;
+        //        }
 
-                FieldInfo fiComWebBrowser = webbrowser.GetType().GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
-                if (null != fiComWebBrowser)
-                {
-                    Object objComWebBrowser = fiComWebBrowser.GetValue(webbrowser);
+        //        FieldInfo fiComWebBrowser = webbrowser.GetType().GetField("_axIWebBrowser2", BindingFlags.Instance | BindingFlags.NonPublic);
+        //        if (null != fiComWebBrowser)
+        //        {
+        //            Object objComWebBrowser = fiComWebBrowser.GetValue(webbrowser);
 
-                    if (null != objComWebBrowser)
-                    {
-                        object[] args = new object[]
-                            {
-                            OLECMDID_OPTICAL_ZOOM,
-                            OLECMDEXECOPT_DODEFAULT,
-                            zoom,
-                            IntPtr.Zero
-                            };
-                        objComWebBrowser.GetType().InvokeMember(
-                        "ExecWB",
-                        BindingFlags.InvokeMethod,
-                        null, objComWebBrowser,
-                        args);
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-            }
-        }
+        //            if (null != objComWebBrowser)
+        //            {
+        //                object[] args = new object[]
+        //                    {
+        //                    OLECMDID_OPTICAL_ZOOM,
+        //                    OLECMDEXECOPT_DODEFAULT,
+        //                    zoom,
+        //                    IntPtr.Zero
+        //                    };
+        //                objComWebBrowser.GetType().InvokeMember(
+        //                "ExecWB",
+        //                BindingFlags.InvokeMethod,
+        //                null, objComWebBrowser,
+        //                args);
+        //            }
+        //        }
+        //    }
+        //    catch (System.Exception ex)
+        //    {
+        //    }
+        //}
 
         private void UpdataWindowSize(double _site)
         {
             double __site = _site / 100; // + dpi_site
             Debug.WriteLine(__site);
 
-            SetZoom(webMain, (int)_site);//+ dpi_site * 100
+            //SetZoom(webMain, (int)_site);//+ dpi_site * 100
 
             
             double h = Convert.ToDouble(AppConfig.m_config.FlashHeight);
