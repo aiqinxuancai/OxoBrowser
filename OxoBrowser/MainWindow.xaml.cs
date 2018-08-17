@@ -32,6 +32,9 @@ namespace OxoBrowser
 
         private static readonly bool DebuggingSubProcess = Debugger.IsAttached;
 
+
+        public CefSharp.Wpf.ChromiumWebBrowser chromeMain;
+
         public MainWindow()
         {
             thisFrm = this;
@@ -93,17 +96,40 @@ namespace OxoBrowser
 
 
 
-            var chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
+            chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
             this.Content = chromeMain;
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=798209/";
+            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
         }
 
         private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
             Debug.WriteLine("FrameLoadEnd " + e.Url);
+
+           
+
+            if (e.Url.Contains("/kcscontents/news/"))
+            {
+                if (chromeMain.GetBrowser().HasDocument)
+                {
+
+                }
+
+                //CefRefPtr<CefFrame> frame = browser->GetMainFrame();
+                //std::string strURL = frame->GetURL();
+                //if (isLoading == 0) // && strURL is your page with a form
+                //{
+                //    const char* jscode =
+                //      " document.getElementById(\"Username\").value = \"shirotzu\";  "
+                //    " document.getElementById("\Password\").value = "\qwerty123\";  ";
+                //    ExecuteJavaScript(browser, jscode);
+                //}
+
+                //WebViewConfig.ApplyStyleSheet();
+                //http://203.104.209.7/kcscontents/news/
+            }
         }
 
         private void InitUI()
@@ -313,7 +339,20 @@ namespace OxoBrowser
 
         private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
         {
-            WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
+            chromeMain.ExecuteScriptAsync(@"document.body.style = 'body {
+                                                margin: 0;
+                                                overflow: hidden;
+                                            }'
+                                            document.body.appendChild(node);"
+                );
+
+
+            chromeMain.GetMainFrame().ExecuteJavaScriptAsync(@"document.body.style = 'body {
+                                                margin: 0;
+            overflow: hidden;
+        }'
+                                            document.body.appendChild(node);");
+            //WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
         }
 
         private void webMain_Navigating(object sender, NavigatingCancelEventArgs e)

@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:OxoBrowser"
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="OxoBrowser" Height="600" Width="900" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
+        Title="OxoBrowser" Height="720" Width="1200" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
