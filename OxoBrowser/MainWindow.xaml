@@ -1,4 +1,4 @@
-﻿<Controls:MetroWindow x:Name="winMain" x:Class="OxoBrowser.MainWindow"
+﻿<Controls:MetroWindow
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:OxoBrowser="clr-namespace:OxoBrowser.Controls.Flyouts"              
         xmlns:local="clr-namespace:OxoBrowser"
-        xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:WPF="clr-namespace:Microsoft.Toolkit.Win32.UI.Controls.WPF;assembly=Microsoft.Toolkit.Win32.UI.Controls" x:Name="winMain" x:Class="OxoBrowser.MainWindow"
         mc:Ignorable="d"
         Title="OxoBrowser" Height="720" Width="1200" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
 
@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
 
-    
+
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <!--<Button FontFamily="Wingdings" FontSize="20" Content="B" cal:Message.Attach="[Event Click] = [Action ToggleFlyout(0)]" />-->
@@ -37,35 +37,35 @@
                 </Button.ContextMenu>
             </Button>
             <ToggleButton x:Name="btnTitelWindowTop" Checked="btnTitelWindowTop_Checked" Unchecked="btnTitelWindowTop_Unchecked" ToolTip="窗口置顶">
-                <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                <Rectangle Width="16" Height="16" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_layer_arrange_solid_bringtofront}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </ToggleButton>
             <Button x:Name="btnTitelFlashMin"  Click="btnTitelFlashMin_Click" ToolTip="提取Flash">
-                <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                <Rectangle Width="16" Height="16" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_fullscreen_box}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
             <Button x:Name="btnTitelSound"  Click="btnTitelSound_Click" ToolTip="关闭声音">
-                <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                <Rectangle Width="18" Height="16" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_3}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
             <Button x:Name="btnTitelSoundClose"  Click="btnTitelSoundClose_Click" Visibility="Collapsed" ToolTip="打开声音">
-                <Rectangle Width="18" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                <Rectangle Width="18" Height="16" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_sound_mute}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
             <Button x:Name="btnTitelConfig"  Click="btnTitelConfig_Click" ToolTip="设置">
-                <Rectangle Width="16" Height="16" Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                <Rectangle Width="16" Height="16" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_settings}" />
                     </Rectangle.OpacityMask>
@@ -78,7 +78,7 @@
         <Controls:FlyoutsControl x:Name="flyouts">
             <!--Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Controls:MetroWindow}, Path=ActualWidth}"-->
             <Controls:Flyout Theme="Adapt" x:Name="settingsFlyout" IsModal="True" Header="设置" Position="Right" Width="300"  ClosingFinished="settingsFlyout_ClosingFinished">
-                <OxoBrowser:FlyoutConfig x:Name="flyoutConfig"></OxoBrowser:FlyoutConfig>
+                <OxoBrowser:FlyoutConfig x:Name="flyoutConfig"/>
             </Controls:Flyout>
         </Controls:FlyoutsControl>
     </Controls:MetroWindow.Flyouts>
@@ -86,7 +86,8 @@
     <Grid>
         <Grid>
             <Image x:Name="imageWebMain" />
-            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating"/>
+            <!--<WebBrowser x:Name="edge" Navigated="webMain_Navigated" Navigating="webMain_Navigating"/>-->
+            <WPF:WebView x:Name="edge" NavigationCompleted="webMain_NavigationCompleted" NavigationStarting="webMain_NavigationStarting" />
             <!--<cefSharp:ChromiumWebBrowser x:Name="webMainChrome" Address="https://github.com/cefsharp/CefSharp/wiki/Frequently-asked-questions" />-->
         </Grid>
 

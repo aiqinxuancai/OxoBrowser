@@ -19,7 +19,6 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
 using System.IO;
-using CefSharp;
 
 namespace OxoBrowser
 {
@@ -33,7 +32,6 @@ namespace OxoBrowser
         private static readonly bool DebuggingSubProcess = Debugger.IsAttached;
 
 
-        public CefSharp.Wpf.ChromiumWebBrowser chromeMain;
 
         public MainWindow()
         {
@@ -46,90 +44,9 @@ namespace OxoBrowser
         {
             InitUI();
             UpdataSoundButton();
-            WebViewConfig.SetWebBrowserSilent(webMain, true);
-            WebBrowserZoomInvoker.AddZoomInvoker(webMain);
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
-            //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
-            //Cef.Shutdown();
-
-            webMain.Visibility = Visibility.Hidden;
-
-            var setting = new CefSharp.CefSettings()
-            {
-                CachePath = Directory.GetCurrentDirectory() + @"\Cache",
-            };
-
-            //setting.RemoteDebuggingPort = 8088;
-            setting.Locale = "zh-CN";
-            //setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
-            setting.CefCommandLineArgs.Add("enable-npapi", "1");
-            setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:1080");
-            //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
-
-            setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
-            //setting.CefCommandLineArgs.Add("disable-gpu", "0");
-            //setting.
-
-
-            //setting.CefCommandLineArgs.Add("disable-gpu", "1");
-            //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
-            //setting.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
-
-
-            setting.CefCommandLineArgs.Add("enable-media-stream", "1");
-
-            setting.CefCommandLineArgs["enable-system-flash"] = "0";
-            //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
-            setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
-            setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
-
-
-            //CefSharp.Cef.Initialize(setting);
-
-            if (!Cef.Initialize(setting))
-            {
-                throw new Exception("Unable to Initialize Cef");
-            }
-
-            CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
-
-
-
-            chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
-            this.Content = chromeMain;
-            //chromeMain.Address = "https://www.dmm.com/";
-            //chromeMain.Address = "http://html5test.com/";
-            chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-        }
-
-        private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
-        {
-            Debug.WriteLine("FrameLoadEnd " + e.Url);
-
-           
-
-            if (e.Url.Contains("/kcscontents/news/"))
-            {
-                if (chromeMain.GetBrowser().HasDocument)
-                {
-
-                }
-
-                //CefRefPtr<CefFrame> frame = browser->GetMainFrame();
-                //std::string strURL = frame->GetURL();
-                //if (isLoading == 0) // && strURL is your page with a form
-                //{
-                //    const char* jscode =
-                //      " document.getElementById(\"Username\").value = \"shirotzu\";  "
-                //    " document.getElementById("\Password\").value = "\qwerty123\";  ";
-                //    ExecuteJavaScript(browser, jscode);
-                //}
-
-                //WebViewConfig.ApplyStyleSheet();
-                //http://203.104.209.7/kcscontents/news/
-            }
+            //WebViewConfig.SetWebBrowserSilent(webMain, true);
+            //WebBrowserZoomInvoker.AddZoomInvoker(webMain);
+            edge.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/"); 
         }
 
         private void InitUI()
@@ -147,13 +64,13 @@ namespace OxoBrowser
         {
             if (_show)
             {
-                imageWebMain.Source = WebScreenshot.BrowserSnapShot(webMain);
-                webMain.Visibility = Visibility.Hidden;
+                //imageWebMain.Source = WebScreenshot.BrowserSnapShot(webMain);
+                edge.Visibility = Visibility.Hidden;
             }
             else
             {
                 imageWebMain.Source = null;
-                webMain.Visibility = Visibility.Visible;
+                edge.Visibility = Visibility.Visible;
             }
 
         }
@@ -213,20 +130,20 @@ namespace OxoBrowser
                 int SizeNew = int.Parse(sizeString.Replace("%", ""));
 
                 UpdataWindowSize(SizeNew);
-                System.Windows.Forms.Screen screenSize = System.Windows.Forms.Screen.FromHandle(webMain.Handle);
-                if (winMain.MinWidth > screenSize.Bounds.Width | webMain.Height + 100 > screenSize.Bounds.Height)
+                System.Windows.Forms.Screen screenSize = System.Windows.Forms.Screen.FromHandle(edge.Handle);
+                if (winMain.MinWidth > screenSize.Bounds.Width | edge.Height + 100 > screenSize.Bounds.Height)
                 {
                     MessageBox.Show("你设置的尺寸超出了屏幕的大小！还原回100%！", "ERROR");
                     if (SizeNew != 100)
                     {
                         UpdataWindowSize(100);
                     }
-                    winMain.Height = webMain.Height ; //+30
+                    winMain.Height = edge.Height ; //+30
                     winMain.Width = winMain.MinWidth;
                 }
                 else
                 {
-                    winMain.Height = webMain.Height ; //+30
+                    winMain.Height = edge.Height ; //+30
                     winMain.Width = winMain.MinWidth;
                 }
             }
@@ -291,11 +208,11 @@ namespace OxoBrowser
             
             double h = Convert.ToDouble(AppConfig.m_config.FlashHeight);
             double w = Convert.ToDouble(AppConfig.m_config.FlashWidth);
-            webMain.Height = h * (__site);
-            webMain.Width = w * (__site);
+            edge.Height = h * (__site);
+            edge.Width = w * (__site);
 
-            winMain.MinHeight = webMain.Height;
-            winMain.MinWidth = webMain.Width;
+            winMain.MinHeight = edge.Height;
+            winMain.MinWidth = edge.Width;
 
             if (_site != 100)
             {
@@ -332,27 +249,26 @@ namespace OxoBrowser
             UpdataSoundButton();
         }
 
-        private void webMain_Navigated(object sender, NavigationEventArgs e)
+        //private void webMain_Navigated(object sender, NavigationEventArgs e)
+        //{
+        //    WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument) webMain.Document);
+        //}
+
+        private void webMain_NavigationCompleted(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationCompletedEventArgs e)
         {
-            WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument) webMain.Document);
+            Debug.WriteLine(e.Uri.ToString());
         }
+
+        private void webMain_NavigationStarting(object sender, Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT.WebViewControlNavigationStartingEventArgs e)
+        {
+            Debug.WriteLine("webMain_NavigationStarting" + e.Uri.ToString());
+        }
+
+
 
         private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
         {
-            chromeMain.ExecuteScriptAsync(@"document.body.style = 'body {
-                                                margin: 0;
-                                                overflow: hidden;
-                                            }'
-                                            document.body.appendChild(node);"
-                );
 
-
-            chromeMain.GetMainFrame().ExecuteJavaScriptAsync(@"document.body.style = 'body {
-                                                margin: 0;
-            overflow: hidden;
-        }'
-                                            document.body.appendChild(node);");
-            //WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
         }
 
         private void webMain_Navigating(object sender, NavigatingCancelEventArgs e)
