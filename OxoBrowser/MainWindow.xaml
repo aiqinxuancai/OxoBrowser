@@ -8,7 +8,7 @@
         xmlns:local="clr-namespace:OxoBrowser"
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="OxoBrowser" Height="720" Width="1200" Loaded="winMain_Loaded" EnableDWMDropShadow="True" WindowStartupLocation="CenterScreen" TitleCaps="False">
+        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" TitleCaps="False" TitlebarHeight="30">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
@@ -86,7 +86,7 @@
     <Grid>
         <Grid>
             <Image x:Name="imageWebMain" />
-            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating"/>
+            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating" />
             <!--<cefSharp:ChromiumWebBrowser x:Name="webMainChrome" Address="https://github.com/cefsharp/CefSharp/wiki/Frequently-asked-questions" />-->
         </Grid>
 

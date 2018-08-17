@@ -64,7 +64,7 @@ namespace OxoBrowser
             setting.Locale = "zh-CN";
             //setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
             setting.CefCommandLineArgs.Add("enable-npapi", "1");
-            setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:1080");
+            setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:37161");
             //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
 
             setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
@@ -97,10 +97,16 @@ namespace OxoBrowser
 
 
             chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
+            chromeMain.MaxHeight = 720;
+            chromeMain.MaxWidth = 1200;
+            chromeMain.MinHeight = 720;
+            chromeMain.MinWidth = 1200;
             this.Content = chromeMain;
+
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
+            
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
         }
 
@@ -110,25 +116,12 @@ namespace OxoBrowser
 
            
 
-            if (e.Url.Contains("/kcscontents/news/"))
+            if (e.Frame.Name == "game_frame")
             {
                 if (chromeMain.GetBrowser().HasDocument)
                 {
-
+                    GetKanColle2ndHtml5Core();
                 }
-
-                //CefRefPtr<CefFrame> frame = browser->GetMainFrame();
-                //std::string strURL = frame->GetURL();
-                //if (isLoading == 0) // && strURL is your page with a form
-                //{
-                //    const char* jscode =
-                //      " document.getElementById(\"Username\").value = \"shirotzu\";  "
-                //    " document.getElementById("\Password\").value = "\qwerty123\";  ";
-                //    ExecuteJavaScript(browser, jscode);
-                //}
-
-                //WebViewConfig.ApplyStyleSheet();
-                //http://203.104.209.7/kcscontents/news/
             }
         }
 
@@ -339,21 +332,44 @@ namespace OxoBrowser
 
         private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
         {
-            chromeMain.ExecuteScriptAsync(@"document.body.style = 'body {
-                                                margin: 0;
-                                                overflow: hidden;
-                                            }'
-                                            document.body.appendChild(node);"
-                );
 
-
-            chromeMain.GetMainFrame().ExecuteJavaScriptAsync(@"document.body.style = 'body {
-                                                margin: 0;
-            overflow: hidden;
-        }'
-                                            document.body.appendChild(node);");
-            //WebViewConfig.ApplyStyleSheet((mshtml.HTMLDocument)webMain.Document);
+            GetKanColle2ndHtml5Core();
         }
+
+
+        private void GetKanColle2ndHtml5Core()
+        {
+
+            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
+                "document.body.appendChild(node);");
+
+            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'game_frame {position:fixed; left:50%; top:0px; margin-left:-480px; z-index:1;}'; " +
+                "document.body.appendChild(node);");
+
+            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'ul.area-menu {display: none;}'; " +
+                "document.body.appendChild(node);");
+            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = '.dmm-ntgnavi {display: none;}'; " +
+                "document.body.appendChild(node);");
+
+            var game_frame = chromeMain.GetBrowser().GetFrame("game_frame");
+            //game_frame.ExecuteJavaScriptAsync("if(document.getElementById('spacing_top')) {alert(document.getElementById('spacing_top').height);}");
+            game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
+            //chromeMain.ExecuteScriptAsync("alert(window.document.getElementById('spacing_top').innerHTML);");
+
+            //game_frame.ExecuteJavaScriptAsync("var node = document.createElement('style'); " +
+            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
+            //                                    "document.getElementById('spacing_top').appendChild(node);");
+
+            //chromeMain.ExecuteScriptAsync("document.getElementById('spacing_top').height=0;");
+            //chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
+            //                                    "document.body.appendChild(node);");
+        }
+
 
         private void webMain_Navigating(object sender, NavigatingCancelEventArgs e)
         {
