@@ -9,7 +9,7 @@
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       mc:Ignorable="d"
-        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True">
+        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True" ShowIconOnTitleBar="True" TitleCaps="False" EnableDWMDropShadow="True">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
@@ -20,9 +20,15 @@
         </ResourceDictionary>
     </Controls:MetroWindow.Resources>
 
-    
+    <Controls:MetroWindow.LeftWindowCommands>
+        <Controls:WindowCommands>
+            <Button Content="0.0.1"></Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.LeftWindowCommands>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
+            
+            
             <!--<Button FontFamily="Wingdings" FontSize="20" Content="B" cal:Message.Attach="[Event Click] = [Action ToggleFlyout(0)]" />-->
             <Button x:Name="btnTitelWindowSize" Content="100%" Click="btnTitelWindowSize_Click" >
                 <Button.ContextMenu>
@@ -49,10 +55,11 @@
                 <iconPacks:PackIconMaterial Kind="ArrowExpandAll" />
             </Button>
             <Button x:Name="btnTitelSound"  Click="btnTitelSound_Click" ToolTip="关闭声音">
-                <iconPacks:PackIconMaterial Kind="MusicNoteOff" />
+                <iconPacks:PackIconMaterial Kind="MusicNote" />
             </Button>
             <Button x:Name="btnTitelSoundClose"  Click="btnTitelSoundClose_Click" Visibility="Collapsed" ToolTip="打开声音">
-                <iconPacks:PackIconMaterial Kind="MusicNote" />
+                
+                <iconPacks:PackIconMaterial Kind="MusicNoteOff" />
             </Button>
             <Button x:Name="btnTitelConfig"  Click="btnTitelConfig_Click" ToolTip="设置">
                 <iconPacks:PackIconMaterial Kind="Settings" />
