@@ -21,6 +21,7 @@ using System.Reflection;
 using System.IO;
 using CefSharp;
 using System.Windows.Interop;
+using OxoBrowser.Wins;
 
 namespace OxoBrowser
 {
@@ -43,43 +44,9 @@ namespace OxoBrowser
 
         }
 
-        private const int WM_MOUSEMOVE = 0x200;
-        private const int WM_LBUTTONDOWN = 513;
-        private const int WM_LBUTTONUP = 514;
-
-        IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            
-            if (msg == WM_LBUTTONDOWN)
-            {
-                //var a = ((UInt32)y << 16) | (UInt32)x;
-                int x = (ushort)lParam.ToInt32();
-                int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-
-
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
-                //System.Threading.Thread.Sleep(10);
-
-                handled = true;
-            }
-            if (msg == WM_LBUTTONUP)
-            {
-                int x = (ushort)lParam.ToInt32();
-                int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-
-                //在这里添加鼠标移动的响应
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
-                handled = true;
-            }
-            return (new IntPtr(0));
-        }
 
         private void winMain_Loaded(object sender, RoutedEventArgs e)
         {
-            IntPtr hwnd = new WindowInteropHelper(this).Handle;
-            HwndSource hs = HwndSource.FromHwnd(hwnd);
-            hs.AddHook(new HwndSourceHook(WndProc));
-
             InitUI();
             UpdataSoundButton();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
@@ -130,40 +97,10 @@ namespace OxoBrowser
 
             CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
 
-            
-            chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
-            chromeMain.MaxHeight = 720;
-            chromeMain.MaxWidth = 1200;
-            chromeMain.MinHeight = 720;
-            chromeMain.MinWidth = 1200;
-            chromeMain.MouseUp += ChromeMain_MouseUp;
-            this.Content = chromeMain;
-            //chromeMain.SendMouseWheelEvent()
-            //chromeMain.Address = "https://www.dmm.com/";
-            
-            chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
-            //chromeMain.Address = "http://html5test.com/";
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-        }
+            ChromeWindow.Create(this);
 
-        private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            Debug.WriteLine("ChromeMain_MouseUp");
-        }
+            ChromeWindowSynchronize();
 
-        private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
-        {
-            Debug.WriteLine("FrameLoadEnd " + e.Url);
-
-           
-
-            if (e.Frame.Name == "game_frame")
-            {
-                if (chromeMain.GetBrowser().HasDocument)
-                {
-                    GetKanColle2ndHtml5Core();
-                }
-            }
         }
 
         private void InitUI()
@@ -181,13 +118,13 @@ namespace OxoBrowser
         {
             if (_show)
             {
-                imageWebMain.Source = WebScreenshot.BrowserSnapShot(webMain);
-                webMain.Visibility = Visibility.Hidden;
+                imageWebMain.Source = WebScreenshot.BrowserSnapShot(ChromeWindow.thisWindow);
+                ChromeWindow.thisWindow.Visibility = Visibility.Hidden;
             }
             else
             {
                 imageWebMain.Source = null;
-                webMain.Visibility = Visibility.Visible;
+                ChromeWindow.thisWindow.Visibility = Visibility.Visible;
             }
 
         }
@@ -374,42 +311,10 @@ namespace OxoBrowser
         private void btnTitelFlashMin_Click(object sender, RoutedEventArgs e)
         {
 
-            GetKanColle2ndHtml5Core();
+            //GetKanColle2ndHtml5Core();
         }
 
 
-        private void GetKanColle2ndHtml5Core()
-        {
-
-            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
-                "document.body.appendChild(node);");
-
-            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'game_frame {position:fixed; left:50%; top:0px; margin-left:-480px; z-index:1;}'; " +
-                "document.body.appendChild(node);");
-
-            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'ul.area-menu {display: none;}'; " +
-                "document.body.appendChild(node);");
-            chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = '.dmm-ntgnavi {display: none;}'; " +
-                "document.body.appendChild(node);");
-
-            var game_frame = chromeMain.GetBrowser().GetFrame("game_frame");
-            //game_frame.ExecuteJavaScriptAsync("if(document.getElementById('spacing_top')) {alert(document.getElementById('spacing_top').height);}");
-            game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
-            //chromeMain.ExecuteScriptAsync("alert(window.document.getElementById('spacing_top').innerHTML);");
-
-            //game_frame.ExecuteJavaScriptAsync("var node = document.createElement('style'); " +
-            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
-            //                                    "document.getElementById('spacing_top').appendChild(node);");
-
-            //chromeMain.ExecuteScriptAsync("document.getElementById('spacing_top').height=0;");
-            //chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
-            //                                    "document.body.appendChild(node);");
-        }
 
 
         private void webMain_Navigating(object sender, NavigatingCancelEventArgs e)
@@ -434,6 +339,23 @@ namespace OxoBrowser
             this.menuGameSize.IsOpen = true;
         }
 
+        private void winMain_LocationChanged(object sender, EventArgs e)
+        {
+            ChromeWindowSynchronize();
+        }
 
+        private void ChromeWindowSynchronize()
+        {
+            if (ChromeWindow.thisWindow != null)
+            {
+                ChromeWindow.thisWindow.Left = this.Left;
+                ChromeWindow.thisWindow.Top = this.Top + this.TitlebarHeight;
+            }
+        }
+
+        private void btnTitelReload_Click(object sender, RoutedEventArgs e)
+        {
+            ChromeWindow.thisWindow.chromeMain.GetBrowser().Reload();
+        }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OxoBrowser.Wins"
         mc:Ignorable="d"
-        Title="ChromeWindow" Height="450" Width="800">
+        Title="OxoChromeWindow" Height="720" Width="1200" ResizeMode="NoResize" WindowStyle="None" Loaded="CEFWindow_Loaded">
     <Grid>
         
     </Grid>

@@ -6,7 +6,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 
@@ -22,13 +24,13 @@ namespace Base
         /// </summary>
         /// <param name="targetBrowser">我这里用的是Forms的WebBrowser，如果是wpf的，请自己改成Controls并调整参数</param>
         /// <returns></returns>
-        public static ImageSource BrowserSnapShot(WebBrowser targetBrowser)
+        public static ImageSource BrowserSnapShot(Window targetBrowser)
         {
             // 获取宽高
             int screenWidth = (int)targetBrowser.ActualWidth;
             int screenHeight = (int)targetBrowser.ActualHeight;
 
-            IntPtr myIntptr = targetBrowser.Handle;
+            IntPtr myIntptr = new WindowInteropHelper(targetBrowser).Handle;
             int hwndInt = myIntptr.ToInt32();
             IntPtr hwnd = myIntptr;
             //创建图形
