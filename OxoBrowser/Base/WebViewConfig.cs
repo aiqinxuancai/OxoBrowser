@@ -8,6 +8,9 @@ using WebBrowser = System.Windows.Controls.WebBrowser;
 using System.Reflection;
 using System.Diagnostics;
 using OxoBrowser;
+using CefSharp;
+using System.Windows.Interop;
+
 
 namespace Base
 {
@@ -34,6 +37,39 @@ namespace Base
                 }
 
             }
+        }
+
+        public static void GetKanColle2ndHtml5Core(CefSharp.Wpf.ChromiumWebBrowser browser)
+        {
+
+            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
+                "document.body.appendChild(node);");
+
+            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'game_frame {position:fixed; left:50%; top:0px; margin-left:-480px; z-index:1;}'; " +
+                "document.body.appendChild(node);");
+
+            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = 'ul.area-menu {display: none;}'; " +
+                "document.body.appendChild(node);");
+            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
+                "node.innerHTML = '.dmm-ntgnavi {display: none;}'; " +
+                "document.body.appendChild(node);");
+
+            var game_frame = browser.GetBrowser().GetFrame("game_frame");
+            //game_frame.ExecuteJavaScriptAsync("if(document.getElementById('spacing_top')) {alert(document.getElementById('spacing_top').height);}");
+            game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
+            //chromeMain.ExecuteScriptAsync("alert(window.document.getElementById('spacing_top').innerHTML);");
+
+            //game_frame.ExecuteJavaScriptAsync("var node = document.createElement('style'); " +
+            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
+            //                                    "document.getElementById('spacing_top').appendChild(node);");
+
+            //chromeMain.ExecuteScriptAsync("document.getElementById('spacing_top').height=0;");
+            //chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
+            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
+            //                                    "document.body.appendChild(node);");
         }
 
         public static void SetWebBrowserSilent(WebBrowser webBrowser, bool silent)

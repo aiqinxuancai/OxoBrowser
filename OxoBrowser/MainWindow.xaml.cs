@@ -20,6 +20,7 @@ using System.Windows.Controls.Primitives;
 using System.Reflection;
 using System.IO;
 using CefSharp;
+using System.Windows.Interop;
 
 namespace OxoBrowser
 {
@@ -42,8 +43,43 @@ namespace OxoBrowser
 
         }
 
+        private const int WM_MOUSEMOVE = 0x200;
+        private const int WM_LBUTTONDOWN = 513;
+        private const int WM_LBUTTONUP = 514;
+
+        IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            
+            if (msg == WM_LBUTTONDOWN)
+            {
+                //var a = ((UInt32)y << 16) | (UInt32)x;
+                int x = (ushort)lParam.ToInt32();
+                int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
+
+
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
+                //System.Threading.Thread.Sleep(10);
+
+                handled = true;
+            }
+            if (msg == WM_LBUTTONUP)
+            {
+                int x = (ushort)lParam.ToInt32();
+                int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
+
+                //在这里添加鼠标移动的响应
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
+                handled = true;
+            }
+            return (new IntPtr(0));
+        }
+
         private void winMain_Loaded(object sender, RoutedEventArgs e)
         {
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            HwndSource hs = HwndSource.FromHwnd(hwnd);
+            hs.AddHook(new HwndSourceHook(WndProc));
+
             InitUI();
             UpdataSoundButton();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
@@ -54,7 +90,7 @@ namespace OxoBrowser
             //Cef.Shutdown();
 
             webMain.Visibility = Visibility.Hidden;
-
+            
             var setting = new CefSharp.CefSettings()
             {
                 CachePath = Directory.GetCurrentDirectory() + @"\Cache",
@@ -70,7 +106,7 @@ namespace OxoBrowser
             setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
             //setting.CefCommandLineArgs.Add("disable-gpu", "0");
             //setting.
-
+            setting.SetOffScreenRenderingBestPerformanceArgs();
 
             //setting.CefCommandLineArgs.Add("disable-gpu", "1");
             //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
@@ -94,20 +130,25 @@ namespace OxoBrowser
 
             CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
 
-
-
+            
             chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
             chromeMain.MaxHeight = 720;
             chromeMain.MaxWidth = 1200;
             chromeMain.MinHeight = 720;
             chromeMain.MinWidth = 1200;
+            chromeMain.MouseUp += ChromeMain_MouseUp;
             this.Content = chromeMain;
-
+            //chromeMain.SendMouseWheelEvent()
             //chromeMain.Address = "https://www.dmm.com/";
-            //chromeMain.Address = "http://html5test.com/";
-            chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             
+            chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
+            //chromeMain.Address = "http://html5test.com/";
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+        }
+
+        private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Debug.WriteLine("ChromeMain_MouseUp");
         }
 
         private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
