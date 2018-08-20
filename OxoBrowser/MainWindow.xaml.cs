@@ -90,12 +90,18 @@ namespace OxoBrowser
 
             //CefSharp.Cef.Initialize(setting);
 
+            Cef.EnableHighDPISupport();
+
+
             if (!Cef.Initialize(setting))
             {
                 throw new Exception("Unable to Initialize Cef");
             }
 
             CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
+
+
+            
 
             ChromeWindow.Create(this);
 

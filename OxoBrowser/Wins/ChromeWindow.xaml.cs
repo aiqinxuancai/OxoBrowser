@@ -32,6 +32,9 @@ namespace OxoBrowser.Wins
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
 
+        private double dpiSize = 1; 
+
+
         IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
 
@@ -41,8 +44,9 @@ namespace OxoBrowser.Wins
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
 
+                TransformToPixels(x, y, out int nx, out int ny);
 
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(nx, ny, MouseButtonType.Left, false, 1, CefEventFlags.None);
                 //System.Threading.Thread.Sleep(10);
 
                 handled = true;
@@ -52,8 +56,9 @@ namespace OxoBrowser.Wins
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
 
+                TransformToPixels(x, y, out int nx, out int ny);
                 //在这里添加鼠标移动的响应
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(nx, ny, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
             return (new IntPtr(0));
@@ -61,10 +66,15 @@ namespace OxoBrowser.Wins
 
         public ChromeWindow()
         {
+
             InitializeComponent();
+
+            using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
+            {
+                dpiSize = (g.DpiX / 96);
+            }
+             
             thisWindow = this;
-
-
         }
 
         ~ChromeWindow()
@@ -126,6 +136,24 @@ namespace OxoBrowser.Wins
                     WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
                 }
             }
+        }
+
+
+        /// <summary>
+        /// Transforms device independent units (1/96 of an inch)
+        /// to pixels
+        /// </summary>
+        /// <param name="unitX">a device independent unit value X</param>
+        /// <param name="unitY">a device independent unit value Y</param>
+        /// <param name="pixelX">returns the X value in pixels</param>
+        /// <param name="pixelY">returns the Y value in pixels</param>
+        public void TransformToPixels(double unitX,
+                                      double unitY,
+                                      out int pixelX,
+                                      out int pixelY)
+        {
+            pixelX = (int)(dpiSize * unitX);
+            pixelY = (int)(dpiSize * unitY);
         }
     }
 }
