@@ -56,7 +56,7 @@ namespace OxoBrowser.Wins
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
-            return (new IntPtr(0));
+            return IntPtr.Zero;
         }
 
         public ChromeWindow()
