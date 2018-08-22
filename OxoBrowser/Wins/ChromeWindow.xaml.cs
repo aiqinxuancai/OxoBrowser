@@ -32,27 +32,28 @@ namespace OxoBrowser.Wins
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
 
+        /// <summary>
+        /// 实现wpf无法响应点击消息的问题
+        /// </summary>
+        /// <param name="hwnd"></param>
+        /// <param name="msg"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <param name="handled"></param>
+        /// <returns></returns>
         IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-
             if (msg == WM_LBUTTONDOWN)
             {
-                //var a = ((UInt32)y << 16) | (UInt32)x;
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-
-
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
-                //System.Threading.Thread.Sleep(10);
-
                 handled = true;
             }
             if (msg == WM_LBUTTONUP)
             {
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-
-                //在这里添加鼠标移动的响应
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
@@ -63,8 +64,6 @@ namespace OxoBrowser.Wins
         {
             InitializeComponent();
             thisWindow = this;
-
-
         }
 
         ~ChromeWindow()
@@ -83,7 +82,6 @@ namespace OxoBrowser.Wins
 
                 var interop = new WindowInteropHelper(winLog);
                 interop.EnsureHandle();
-                // this is it 
                 interop.Owner = new WindowInteropHelper(from).Handle;
             }
         }
@@ -102,7 +100,6 @@ namespace OxoBrowser.Wins
             chromeMain.MinWidth = 1200;
             chromeMain.MouseUp += ChromeMain_MouseUp;
             this.Content = chromeMain;
-            //chromeMain.SendMouseWheelEvent()
             //chromeMain.Address = "https://www.dmm.com/";
 
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;

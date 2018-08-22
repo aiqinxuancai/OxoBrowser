@@ -14,7 +14,7 @@ using System.Windows.Media;
 
 namespace Base
 {
-    class WebScreenshot
+    class Screenshot
     {
         [DllImport("user32.dll")]
         private static extern bool PrintWindow(IntPtr hwnd, IntPtr hdcBlt, uint nFlags);
