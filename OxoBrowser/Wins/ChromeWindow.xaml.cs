@@ -31,7 +31,8 @@ namespace OxoBrowser.Wins
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
-
+        private const int WM_KEYDOWN = 256;
+        private const int WM_KEYUP = 257;
         /// <summary>
         /// 实现wpf无法响应点击消息的问题
         /// </summary>
@@ -50,13 +51,14 @@ namespace OxoBrowser.Wins
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
                 handled = true;
             }
-            if (msg == WM_LBUTTONUP)
+            if (msg == WM_LBUTTONUP) 
             {
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
+
             return IntPtr.Zero;
         }
 
