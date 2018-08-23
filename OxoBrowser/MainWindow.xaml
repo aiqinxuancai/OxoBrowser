@@ -22,7 +22,7 @@
 
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
-            <Button Content="0.0.1"></Button>
+            <Button Content="0.0.2"></Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.LeftWindowCommands>
     <Controls:MetroWindow.RightWindowCommands>

@@ -49,14 +49,29 @@ namespace OxoBrowser.Wins
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
-                handled = true;
+                //handled = true;
             }
             if (msg == WM_LBUTTONUP) 
             {
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
-                handled = true;
+                //handled = true;
+            }
+            if (msg == WM_KEYDOWN)
+            {
+                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                {
+                    handled = true;
+                }
+            }
+            if (msg == WM_KEYUP)
+            {
+                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                {
+                    chromeMain.Reload(); 
+                    handled = true;
+                }
             }
 
             return IntPtr.Zero;
