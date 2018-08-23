@@ -49,14 +49,14 @@ namespace OxoBrowser.Wins
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
-                //handled = true;
+                handled = true;
             }
             if (msg == WM_LBUTTONUP) 
             {
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
-                //handled = true;
+                handled = true;
             }
             if (msg == WM_KEYDOWN)
             {
@@ -122,6 +122,7 @@ namespace OxoBrowser.Wins
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            chromeMain.Focus();
         }
 
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
