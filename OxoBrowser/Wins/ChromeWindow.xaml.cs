@@ -31,7 +31,8 @@ namespace OxoBrowser.Wins
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
-
+        private const int WM_KEYDOWN = 256;
+        private const int WM_KEYUP = 257;
         /// <summary>
         /// 实现wpf无法响应点击消息的问题
         /// </summary>
@@ -50,13 +51,29 @@ namespace OxoBrowser.Wins
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
                 handled = true;
             }
-            if (msg == WM_LBUTTONUP)
+            if (msg == WM_LBUTTONUP) 
             {
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
+            if (msg == WM_KEYDOWN)
+            {
+                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                {
+                    handled = true;
+                }
+            }
+            if (msg == WM_KEYUP)
+            {
+                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                {
+                    chromeMain.Reload(); 
+                    handled = true;
+                }
+            }
+
             return IntPtr.Zero;
         }
 
@@ -105,6 +122,7 @@ namespace OxoBrowser.Wins
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            chromeMain.Focus();
         }
 
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)

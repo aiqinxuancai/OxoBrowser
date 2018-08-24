@@ -41,7 +41,6 @@ namespace Base
 
         public static void GetKanColle2ndHtml5Core(CefSharp.Wpf.ChromiumWebBrowser browser)
         {
-
             browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
                 "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
                 "document.body.appendChild(node);");
@@ -58,18 +57,8 @@ namespace Base
                 "document.body.appendChild(node);");
 
             var game_frame = browser.GetBrowser().GetFrame("game_frame");
-            //game_frame.ExecuteJavaScriptAsync("if(document.getElementById('spacing_top')) {alert(document.getElementById('spacing_top').height);}");
             game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
-            //chromeMain.ExecuteScriptAsync("alert(window.document.getElementById('spacing_top').innerHTML);");
 
-            //game_frame.ExecuteJavaScriptAsync("var node = document.createElement('style'); " +
-            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
-            //                                    "document.getElementById('spacing_top').appendChild(node);");
-
-            //chromeMain.ExecuteScriptAsync("document.getElementById('spacing_top').height=0;");
-            //chromeMain.ExecuteScriptAsync("var node = document.createElement('style'); " +
-            //                                    "node.innerHTML = 'spacing_top {height: 0px;}'; " +
-            //                                    "document.body.appendChild(node);");
         }
 
         public static void SetWebBrowserSilent(WebBrowser webBrowser, bool silent)
@@ -136,9 +125,6 @@ namespace Base
             double old_height = 580;
             double old_width = 960;
             double height_min = 75;
-            //double dpi_site = 0;
-            //int dpi = Dpi.GetDpi();
-
 
             double __site = _site / 100; // + dpi_site
             System.Diagnostics.Debug.WriteLine(__site);
@@ -152,7 +138,6 @@ namespace Base
             _webbrowser.MinWidth = old_width * __site;
 
             return _site;
-
         }
 
         public static mshtml.IHTMLElement GetFlashObjectFromGameFrame(mshtml.IHTMLElement _gameFrame,out string _firstFrame)
