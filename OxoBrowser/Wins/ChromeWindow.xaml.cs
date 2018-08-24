@@ -28,6 +28,9 @@ namespace OxoBrowser.Wins
 
         public static ChromeWindow thisWindow ;
 
+        private bool mouseFirstLButtonDown = false;
+        private bool mouseFirstLButtonUp = false;
+
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
@@ -46,6 +49,12 @@ namespace OxoBrowser.Wins
         {
             if (msg == WM_LBUTTONDOWN)
             {
+                if (mouseFirstLButtonDown == false) //不处理第一次操作
+                {
+                    mouseFirstLButtonDown = true;
+                    return IntPtr.Zero;
+                }
+                
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
@@ -53,6 +62,11 @@ namespace OxoBrowser.Wins
             }
             if (msg == WM_LBUTTONUP) 
             {
+                if (mouseFirstLButtonUp == false) //不处理第一次操作
+                {
+                    mouseFirstLButtonUp = true;
+                    return IntPtr.Zero;
+                }
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
                 chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
