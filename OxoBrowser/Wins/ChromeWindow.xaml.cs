@@ -3,6 +3,7 @@ using CefSharp;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,8 @@ namespace OxoBrowser.Wins
         private bool mouseFirstLButtonDown = false;
         private bool mouseFirstLButtonUp = false;
 
+        private PointF dpiPointF;
+
         private const int WM_MOUSEMOVE = 0x200;
         private const int WM_LBUTTONDOWN = 513;
         private const int WM_LBUTTONUP = 514;
@@ -57,7 +60,7 @@ namespace OxoBrowser.Wins
                 
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, false, 1, CefEventFlags.None);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x / (int)dpiPointF.X, y / (int)dpiPointF.Y, MouseButtonType.Left, false, 1, CefEventFlags.None);
                 handled = true;
             }
             if (msg == WM_LBUTTONUP) 
@@ -69,7 +72,7 @@ namespace OxoBrowser.Wins
                 }
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x, y, MouseButtonType.Left, true, 1, CefEventFlags.None);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x / (int)dpiPointF.X, y / (int)dpiPointF.Y, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
             }
             if (msg == WM_KEYDOWN)
@@ -95,12 +98,16 @@ namespace OxoBrowser.Wins
         {
             InitializeComponent();
             thisWindow = this;
+            dpiPointF = WebBrowserZoomInvoker.GetCurrentDIPScale();
         }
 
         ~ChromeWindow()
         {
             thisWindow = null;
         }
+
+
+
 
         public static void Create(Window from)
         {
