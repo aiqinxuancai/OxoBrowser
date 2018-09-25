@@ -79,7 +79,7 @@
     <Grid>
         <Grid>
             <Image x:Name="imageWebMain" />
-            <WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating" />
+            <!--<WebBrowser x:Name="webMain" Navigated="webMain_Navigated" Navigating="webMain_Navigating" />-->
             <!--<cefSharp:ChromiumWebBrowser x:Name="webMainChrome" Address="https://github.com/cefsharp/CefSharp/wiki/Frequently-asked-questions" />-->
         </Grid>
 
