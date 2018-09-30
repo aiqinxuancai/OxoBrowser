@@ -1,5 +1,6 @@
 ﻿using Base;
 using CefSharp;
+using MahApps.Metro.Controls;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -138,12 +139,25 @@ namespace OxoBrowser.Wins
             chromeMain.MinWidth = 1200;
             chromeMain.MouseUp += ChromeMain_MouseUp;
             this.Content = chromeMain;
-            //chromeMain.Address = "https://www.dmm.com/";
-
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
+            chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
+            //chromeMain.Address = "https://www.dmm.com/";
+            chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
+            
             //chromeMain.Address = "http://html5test.com/";
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            //chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
             chromeMain.Focus();
+        }
+
+        private void ChromeMain_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            if (e.IsLoading)
+                return;
+
+            this.BeginInvoke((Action)(() =>
+            {
+                WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
+            }));
         }
 
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
@@ -153,15 +167,15 @@ namespace OxoBrowser.Wins
 
         private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            Debug.WriteLine("FrameLoadEnd " + e.Url);
+            Debug.WriteLine("FrameLoadEnd "  + e.Frame.Name + " " + e.Url);
 
-            if (e.Frame.Name == "game_frame")
-            {
-                if (chromeMain.GetBrowser().HasDocument)
-                {
-                    WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
-                }
-            }
+            //if (e.Frame.Name == "game_frame")
+            //{
+            //    if (chromeMain.GetBrowser().HasDocument)
+            //    {
+            //        WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
+            //    }
+            //}
         }
     }
 }

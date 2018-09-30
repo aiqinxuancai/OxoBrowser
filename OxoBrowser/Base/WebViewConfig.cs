@@ -35,6 +35,15 @@ namespace Base
                 "document.body.appendChild(node);");
 
             var game_frame = browser.GetBrowser().GetFrame("game_frame");
+            var source = game_frame.GetSourceAsync();
+            source.Wait();
+
+ 
+            //"overlap-contents"
+            //var contents_iframe = browser.GetBrowser().GetFrame("contents_iframe");
+            //var list2 = game_frame.Browser.GetFrameNames();
+            //var list = browser.GetBrowser().GetFrameNames();
+            //browser.GetBrowser();
 
             game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
 
