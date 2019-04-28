@@ -141,9 +141,10 @@ namespace OxoBrowser.Wins
             this.Content = chromeMain;
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
+            chromeMain.RequestHandler = new RequestHandlerNew(chromeMain.RequestHandler); 
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
-            
+
             //chromeMain.Address = "http://html5test.com/";
             chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
             chromeMain.Focus();
@@ -168,14 +169,6 @@ namespace OxoBrowser.Wins
         private void ChromeMain_FrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
             Debug.WriteLine("FrameLoadEnd "  + e.Frame.Name + " " + e.Url);
-
-            //if (e.Frame.Name == "game_frame")
-            //{
-            //    if (chromeMain.GetBrowser().HasDocument)
-            //    {
-            //        WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
-            //    }
-            //}
         }
     }
 }

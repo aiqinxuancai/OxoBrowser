@@ -38,7 +38,19 @@ namespace Base
             var source = game_frame?.GetSourceAsync();
             source?.Wait();
 
- 
+
+            //Browser.SetZoomLevel(Math.Log(zoomFactor, 1.2));
+
+
+            //if (StyleSheetApplied)
+            //{
+            //    Browser.Size = Browser.MinimumSize = new Size(
+            //        (int)(KanColleSize.Width * zoomFactor),
+            //        (int)(KanColleSize.Height * zoomFactor)
+            //        );
+
+            //    CenteringBrowser();
+            //}
             //"overlap-contents"
             //var contents_iframe = browser.GetBrowser().GetFrame("contents_iframe");
             //var list2 = game_frame.Browser.GetFrameNames();

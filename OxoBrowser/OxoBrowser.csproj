@@ -150,6 +150,8 @@
     <Compile Include="Wins\ChromeWindow.xaml.cs">
       <DependentUpon>ChromeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Wins\MemoryStreamResponseFilter.cs" />
+    <Compile Include="Wins\RequestHandlerNew.cs" />
     <Compile Include="Wins\WinConfig.xaml.cs">
       <DependentUpon>WinConfig.xaml</DependentUpon>
     </Compile>
