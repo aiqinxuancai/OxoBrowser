@@ -132,18 +132,27 @@ namespace OxoBrowser.Wins
             hs.AddHook(new HwndSourceHook(WndProc));
 
             chromeMain = new CefSharp.Wpf.ChromiumWebBrowser();
-            chromeMain.MaxHeight = 720;
-            chromeMain.MaxWidth = 1200;
-            chromeMain.MinHeight = 720;
-            chromeMain.MinWidth = 1200;
+            chromeMain.MaxHeight = 576;
+            chromeMain.MaxWidth = 1041;
+            chromeMain.MinHeight = 576;
+            chromeMain.MinWidth = 1041;
             chromeMain.MouseUp += ChromeMain_MouseUp;
             this.Content = chromeMain;
-            //chromeMain.Address = "https://www.dmm.com/";
+
+            // CORS
+            chromeMain.BrowserSettings.WebSecurity = CefState.Disabled;
+            chromeMain.BrowserSettings.FileAccessFromFileUrls = CefState.Enabled;
+            chromeMain.BrowserSettings.UniversalAccessFromFileUrls = CefState.Enabled;
 
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
-            //chromeMain.Address = "http://html5test.com/";
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
+            chromeMain.Address = "http://pc-play.games.dmm.com/play/namuami_utena/";
             chromeMain.Focus();
+        }
+
+        private void ChromeMain_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            
         }
 
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
@@ -155,11 +164,11 @@ namespace OxoBrowser.Wins
         {
             Debug.WriteLine("FrameLoadEnd " + e.Url);
 
-            if (e.Frame.Name == "game_frame")
+            if (e.Frame.Url.Contains("/play/namuami_utena"))
             {
                 if (chromeMain.GetBrowser().HasDocument)
                 {
-                    WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
+                    WebViewConfig.GetBungo(chromeMain);
                 }
             }
         }

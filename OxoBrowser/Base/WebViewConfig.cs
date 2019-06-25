@@ -39,26 +39,35 @@ namespace Base
             }
         }
 
-        public static void GetKanColle2ndHtml5Core(CefSharp.Wpf.ChromiumWebBrowser browser)
+        public static void GetBungo(CefSharp.Wpf.ChromiumWebBrowser browser)
         {
-            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
-                "document.body.appendChild(node);");
+            try
+            {
+                browser.ExecuteScriptAsync(@"
+var del = document.getElementsByClassName('dmm-ntgnavi')[0]
+del.parentNode.removeChild(del)
+document.getElementById('main-ntg').style.margin= '0px 0px 0 0';
+");
 
-            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'game_frame {position:fixed; left:50%; top:0px; margin-left:-480px; z-index:1;}'; " +
-                "document.body.appendChild(node);");
+//                var gameFrame = browser.GetBrowser().GetFrame("game_frame");
+//                gameFrame.ExecuteJavaScriptAsync(@"
+//var gameFrameWnd = document.getElementById('game_frame').contentWindow.document;
+//var contentsFrameWnd = document.getElementById('contents_iframe').contentWindow.document;
 
-            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'ul.area-menu {display: none;}'; " +
-                "document.body.appendChild(node);");
-            browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = '.dmm-ntgnavi {display: none;}'; " +
-                "document.body.appendChild(node);");
+//var wrapper = contentsFrameWnd.getElementById('content-wrapper');
+//wrapper.className = '';
+//wrapper.children[1].style = 'top: 0px; left: 0px;';
 
-            var game_frame = browser.GetBrowser().GetFrame("game_frame");
-            game_frame.ExecuteJavaScriptAsync("document.getElementById('spacing_top').style.height = '0px'");
+//var style = document.createElement('style')
+//style.styleSheet.cssText = 'body { margin:0;     overflow:hidden }  #content-wrapper { 	position:fixed; left:50%; top:0px;  margin-left:-480px; z-index:1; } .relative onframe-origin { top: 0px; left: 0px; } ul.area-menu{ display:none; }  .page-inner { position:absolute; left:0px; top:0px; }';
+//                ");
 
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.Print($"[{nameof(GetBungo)}]  {ex}");
+            }
         }
 
         public static void SetWebBrowserSilent(WebBrowser webBrowser, bool silent)

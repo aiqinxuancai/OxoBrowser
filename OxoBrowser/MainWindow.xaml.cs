@@ -50,7 +50,7 @@ namespace OxoBrowser
             UpdataSoundButton();
             WebViewConfig.SetWebBrowserSilent(webMain, true);
             WebBrowserZoomInvoker.AddZoomInvoker(webMain);
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
+            webMain.Navigate("http://pc-play.games.dmm.com/play/namuami_utena/");
             //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
             //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
 
@@ -62,28 +62,29 @@ namespace OxoBrowser
             };
 
             //setting.RemoteDebuggingPort = 8088;
-            setting.Locale = "zh-CN";
-            //setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
+            setting.Locale = "en";
+            setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36";
 
             //代理设置
-            setting.CefCommandLineArgs.Add("enable-npapi", "1");
-            setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:37161");
+            //setting.CefCommandLineArgs.Add("enable-npapi", "1");
+            //setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:37161");
             //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
 
             //硬件加速设置
-            setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
+            setting.CefCommandLineArgs.Add("--off-screen-rendering-enabled", "1");
             //setting.CefCommandLineArgs.Add("disable-gpu", "0");
-            setting.SetOffScreenRenderingBestPerformanceArgs();
+            
+            
             //setting.CefCommandLineArgs.Add("disable-gpu", "1");
             //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
             //setting.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
-            setting.CefCommandLineArgs.Add("enable-media-stream", "1");
+            
 
             //Flash设置
-            setting.CefCommandLineArgs["enable-system-flash"] = "0";
+           // setting.CefCommandLineArgs["enable-system-flash"] = "0";
             //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
-            setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
-            setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
+            //setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
+            //setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
 
 
             if (!Cef.Initialize(setting))

@@ -9,7 +9,7 @@
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       mc:Ignorable="d"
-        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True" ShowIconOnTitleBar="True" TitleCaps="False" EnableDWMDropShadow="True">
+        Title="OxoBrowser" Height="576" Width="1041" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True" ShowIconOnTitleBar="True" TitleCaps="False" EnableDWMDropShadow="True">
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
