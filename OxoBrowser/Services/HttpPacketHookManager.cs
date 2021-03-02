@@ -60,7 +60,6 @@ namespace OxoBrowser
             return false;
         }
 
-        [Obsolete]
         public static int PacketRoute(string path, string result, string postData, string hostName, string headers)
         {
             //TODO 2021.03.02 使用这里作为包处理节点
