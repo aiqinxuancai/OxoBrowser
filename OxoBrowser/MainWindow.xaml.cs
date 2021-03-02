@@ -22,6 +22,7 @@ using System.IO;
 using CefSharp;
 using System.Windows.Interop;
 using OxoBrowser.Wins;
+using CefSharp.Wpf;
 
 namespace OxoBrowser
 {
@@ -53,7 +54,7 @@ namespace OxoBrowser
             //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
             //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
 
-            var setting = new CefSharp.CefSettings()
+            var setting = new CefSettings()
             {
                 CachePath = Directory.GetCurrentDirectory() + @"\Cache",
             };

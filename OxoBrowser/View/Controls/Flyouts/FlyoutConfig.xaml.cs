@@ -34,7 +34,7 @@ namespace OxoBrowser.Controls.Flyouts
                 AppConfig.m_config.ProxyIP = textConfigIP.Text;
                 AppConfig.m_config.ProxyPort = textConfigPort.Text;
                 AppConfig.Save();
-                HttpHook.ReLoadNekoxy();//重置代理
+                HttpPacketHookManager.ReLoadNekoxy();//重置代理
             }
             //应用后关闭
             MainWindow.thisFrm.ToggleFlyout(0); //关闭Flyout

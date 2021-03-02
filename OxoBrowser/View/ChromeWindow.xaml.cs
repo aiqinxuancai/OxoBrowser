@@ -141,7 +141,7 @@ namespace OxoBrowser.Wins
             this.Content = chromeMain;
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
-            chromeMain.RequestHandler = new RequestHandlerNew(chromeMain.RequestHandler); 
+            chromeMain.RequestHandler = new OxoRequestHandler();
             //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
 

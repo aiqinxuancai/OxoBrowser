@@ -36,8 +36,8 @@ namespace OxoBrowser
             IEProxyHelper.SetIE11KeyforWebBrowserControl(AppName);
             IEProxyHelper.SetGPUKeyforWebBrowserControl(AppName);
             AppConfig.Init();
-            HttpHook.InitNekoxy();
-            IEProxyHelper.SetProxy("127.0.0.1:37161");
+            HttpPacketHookManager.InitNekoxy();
+            //IEProxyHelper.SetProxy("127.0.0.1:37161");
         }
 
 
