@@ -9,12 +9,12 @@
         xmlns:cefSharp="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
                       xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       mc:Ignorable="d"
-        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True" ShowIconOnTitleBar="True" TitleCaps="False" EnableDWMDropShadow="True">
+        Title="OxoBrowser" Height="750" Width="1200" Loaded="winMain_Loaded" WindowStartupLocation="CenterScreen" ShowTitleBar="True" ResizeMode="CanMinimize" LocationChanged="winMain_LocationChanged" ShowMinButton="True" ShowActivated="False" ShowCloseButton="True" ShowMaxRestoreButton="True" ShowIconOnTitleBar="True" >
 
     <Controls:MetroWindow.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="pack://application:,,,/Controls/Icons.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/View/Controls/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Thickness x:Key="ControlMargin">0 5 0 0</Thickness>
         </ResourceDictionary>
@@ -47,7 +47,6 @@
                 <iconPacks:PackIconMaterial Kind="Reload" Width="16" Height="16" />
             </Button>
             
-
             <ToggleButton x:Name="btnTitelWindowTop" Checked="btnTitelWindowTop_Checked" Unchecked="btnTitelWindowTop_Unchecked" ToolTip="窗口置顶">
                 <iconPacks:PackIconMaterial Kind="ArrangeBringForward" />
             </ToggleButton>
@@ -62,7 +61,7 @@
                 <iconPacks:PackIconMaterial Kind="MusicNoteOff" />
             </Button>
             <Button x:Name="btnTitelConfig"  Click="btnTitelConfig_Click" ToolTip="设置">
-                <iconPacks:PackIconMaterial Kind="Settings" />
+                <iconPacks:PackIconMaterial Kind="SettingsHelper" />
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>

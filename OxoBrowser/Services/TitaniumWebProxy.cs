@@ -51,7 +51,7 @@ namespace OxoBrowser.Services
                 proxy = "127.0.0.1:" + proxy;
             }
 
-            if (string.IsNullOrWhiteSpace(proxy))
+            if (string.IsNullOrWhiteSpace(AppConfig.m_config.ProxyIP) || string.IsNullOrWhiteSpace(proxy))
             {
                 proxyServer.UpStreamHttpProxy = null;
             }

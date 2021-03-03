@@ -78,14 +78,14 @@ namespace OxoBrowser.Wins
             }
             if (msg == WM_KEYDOWN)
             {
-                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                if (116 == wParam.ToInt32()) //(int)System.Windows.Forms.Keys.F5
                 {
                     handled = true;
                 }
             }
             if (msg == WM_KEYUP)
             {
-                if ((int)System.Windows.Forms.Keys.F5 == wParam.ToInt32())
+                if (116 == wParam.ToInt32())
                 {
                     chromeMain.Reload(); 
                     handled = true;
