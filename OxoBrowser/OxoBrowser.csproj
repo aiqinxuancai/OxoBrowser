@@ -80,15 +80,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Interop.SHDocVw">
-      <HintPath>lib\Interop.SHDocVw.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Nekoxy">
-      <HintPath>lib\Nekoxy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -112,11 +105,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Base\CrossFrameIE.cs" />
     <Compile Include="Base\IEProxy.cs" />
     <Compile Include="Base\IEProxyHelper.cs" />
     <Compile Include="Base\Screenshot.cs" />
+    <Compile Include="Base\SocketHelper.cs" />
     <Compile Include="Base\SoundSetting.cs" />
+    <Compile Include="Services\TitaniumWebProxy.cs" />
     <Compile Include="Base\WebBrowserZoomInvoker.cs" />
     <Compile Include="Base\WebViewConfig.cs" />
     <Compile Include="View\Controls\Flyouts\FlyoutConfig.xaml.cs">
@@ -214,6 +208,9 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>11.0.2</Version>
+    </PackageReference>
+    <PackageReference Include="Titanium.Web.Proxy">
+      <Version>3.1.1344</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

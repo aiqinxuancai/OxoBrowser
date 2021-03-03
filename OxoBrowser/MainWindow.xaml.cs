@@ -65,7 +65,7 @@ namespace OxoBrowser
 
             //代理设置
             setting.CefCommandLineArgs.Add("enable-npapi", "1");
-            setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:37161");
+            //setting.CefCommandLineArgs.Add("--proxy-server", "http://127.0.0.1:37161");
             //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
 
             //硬件加速设置
@@ -88,7 +88,7 @@ namespace OxoBrowser
             {
                 throw new Exception("Unable to Initialize Cef");
             }
-
+            
             CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
 
             ChromeWindow.Create(this);

@@ -1,4 +1,5 @@
 ﻿using Base;
+using OxoBrowser.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -36,8 +37,8 @@ namespace OxoBrowser
             IEProxyHelper.SetIE11KeyforWebBrowserControl(AppName);
             IEProxyHelper.SetGPUKeyforWebBrowserControl(AppName);
             AppConfig.Init();
-            HttpPacketHookManager.InitNekoxy();
-            //IEProxyHelper.SetProxy("127.0.0.1:37161");
+            TitaniumWebProxy.Init();
+
         }
 
 

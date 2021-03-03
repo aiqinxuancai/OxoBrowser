@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Base;
+using OxoBrowser.Services;
 
 namespace OxoBrowser.Controls.Flyouts
 {
@@ -34,7 +35,7 @@ namespace OxoBrowser.Controls.Flyouts
                 AppConfig.m_config.ProxyIP = textConfigIP.Text;
                 AppConfig.m_config.ProxyPort = textConfigPort.Text;
                 AppConfig.Save();
-                HttpPacketHookManager.ReLoadNekoxy();//重置代理
+                TitaniumWebProxy.UpdateUpStreamProxy();
             }
             //应用后关闭
             MainWindow.thisFrm.ToggleFlyout(0); //关闭Flyout
