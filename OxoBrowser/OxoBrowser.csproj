@@ -6,6 +6,7 @@
     <!-- 如果你的项目是 Exe，则设为 WinExe；如果是 WPF 类库，则删掉这一行 -->
     <OutputType>WinExe</OutputType>
     <CefSharpAnyCpuSupport>true</CefSharpAnyCpuSupport>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
     <!-- 如果你的原有项目中有 App.manifest 文件，则在此加入 -->
     <!-- <ApplicationManifest>Properties\App.manifest</ApplicationManifest> -->
 

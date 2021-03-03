@@ -146,7 +146,11 @@ namespace OxoBrowser.Wins
             //chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
 
             //chromeMain.Address = "http://html5test.com/";
-            chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            //chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+
+            chromeMain.Address = "https://apis.baidu.com/store/aladdin/land?cardType=ipSearch";
+        
+
             chromeMain.Focus();
         }
 

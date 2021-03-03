@@ -70,7 +70,7 @@ namespace OxoBrowser
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void InitializeCefSharp()
         {
-            var settings = new CefSettings();
+            //var settings = new CefSettings();
             var setting = new CefSettings()
             {
                 CachePath = Directory.GetCurrentDirectory() + @"\Cache",
@@ -103,11 +103,11 @@ namespace OxoBrowser
 
 
             // Set BrowserSubProcessPath based on app bitness at runtime
-            settings.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+            setting.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
                                                    Environment.Is64BitProcess ? "x64" : "x86",
                                                    "CefSharp.BrowserSubprocess.exe");
 
-            if (!Cef.Initialize(settings, performDependencyCheck: false, browserProcessHandler: null))
+            if (!Cef.Initialize(setting, performDependencyCheck: false, browserProcessHandler: null))
             {
                 throw new Exception("Unable to Initialize Cef");
             }

@@ -18,12 +18,7 @@ namespace OxoBrowser.Services
         public static ProxyServer proxyServer;
         public static int localProxyProt;
 
-
-
-        /// <summary>
-        /// NekoxyHook初始化，支持http包，不支持https获取明文
-        /// </summary>
-        public static void Init() //使用Nekoxy库来处理封包
+        public static void Init() 
         {
             proxyServer = new ProxyServer(false);
             proxyServer.ForwardToUpstreamGateway = true;
@@ -44,7 +39,7 @@ namespace OxoBrowser.Services
         public static void UpdateUpStreamProxy()
         {
             string proxy = AppConfig.m_config.ProxyIP + ":" + AppConfig.m_config.ProxyPort;
-            EasyLog.Write("真实代理:" + proxy);
+            
 
             if (Regex.IsMatch(proxy, @"^\d+$")) //只输入了端口 则补充完全
             {
@@ -64,6 +59,8 @@ namespace OxoBrowser.Services
                 }
                 else
                 {
+                    EasyLog.Write($"更新代理地址:{proxys[0]}:{proxys[1]}");
+
                     proxyServer.UpStreamHttpProxy = new ExternalProxy
                     {
                         HostName = proxys[0],
