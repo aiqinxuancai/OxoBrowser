@@ -53,8 +53,8 @@ namespace OxoBrowser.Wins
 
         void IDisposable.Dispose()
         {
-            memoryStream.Dispose();
-            memoryStream = null;
+            //memoryStream.Dispose();
+            //memoryStream = null;
         }
 
         public byte[] Data
