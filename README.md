@@ -13,7 +13,30 @@
 
 ### 实现数据包拦截
 在HttpPacketHookManager.cs中可以设置需要过滤的网站地址及请求类型，以及处理函数
-![image](https://user-images.githubusercontent.com/4475018/199701287-05a272e8-9a1d-4acc-8ff8-7ebeef7ff3f2.png)
+```csharp
+/// <summary>
+/// 该request是否需要被拦截，拦截后会被提交到PacketRoute
+/// </summary>
+/// <param name="request"></param>
+/// <returns></returns>
+public static bool HookThisRequest(IRequest request)
+{
+    var url = new Uri(request.Url);
+    var extension = url.ToString().ToLower();
+    if (request.Method == "POST" && url.AbsoluteUri.Contains("touken-ranbu.jp/"))
+    {
+        return true;
+    }
+    return false;
+}
+
+public static int PacketRoute(string path, string result, string postData, string hostName, string headers)
+{
+    //TODO 2021.03.02 使用这里作为包处理节点
+
+    return 0;
+}
+```
 
 ### 界面预览
 ![image](https://github.com/user-attachments/assets/dd52e3cd-fe99-484b-9349-8b1796db2749)
