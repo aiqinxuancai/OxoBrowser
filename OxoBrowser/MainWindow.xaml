@@ -53,23 +53,21 @@
             HorizontalAlignment="Left">
 
             <StackPanel Orientation="Horizontal">
-                <ui:Button
-                    x:Name="btnTitelWindowSize"
+
+                <ComboBox
+                    x:Name="comboBoxGameSize"
                     Height="28"
-                    Click="btnTitelWindowSize_Click"
-                    Content="100%">
-                    <Button.ContextMenu>
-                        <ContextMenu x:Name="menuGameSize">
-                            <MenuItem Click="menuGameSize_Click" Header="200%" />
-                            <MenuItem Click="menuGameSize_Click" Header="175%" />
-                            <MenuItem Click="menuGameSize_Click" Header="150%" />
-                            <MenuItem Click="menuGameSize_Click" Header="125%" />
-                            <MenuItem Click="menuGameSize_Click" Header="100%" />
-                            <MenuItem Click="menuGameSize_Click" Header="75%" />
-                            <MenuItem Click="menuGameSize_Click" Header="50%" />
-                        </ContextMenu>
-                    </Button.ContextMenu>
-                </ui:Button>
+                    SelectedIndex="4"
+                    SelectionChanged="comboBoxGameSize_SelectionChanged">
+                    <!--  Default to 100%  -->
+                    <ComboBoxItem Content="200%" />
+                    <ComboBoxItem Content="175%" />
+                    <ComboBoxItem Content="150%" />
+                    <ComboBoxItem Content="125%" />
+                    <ComboBoxItem Content="100%" />
+                    <ComboBoxItem Content="75%" />
+                    <ComboBoxItem Content="50%" />
+                </ComboBox>
 
 
                 <ui:Button
@@ -120,6 +118,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="4">
             <ui:SnackbarPresenter Name="SnackbarPresenter" />
+
             <ContentPresenter Name="DialogPresenter" />
         </Grid>
 

@@ -27,6 +27,12 @@ using Wpf.Ui.Controls;
 using Wpf.Ui;
 using Wpf.Ui.Extensions;
 using OxoBrowser.View;
+using OxoBrowser.Services;
+using System.Windows;
+using System.Windows.Interop;
+using System.Windows.Forms;
+using OpenPandora;
+
 
 namespace OxoBrowser
 {
@@ -196,16 +202,18 @@ namespace OxoBrowser
             winMain.Topmost = false;
         }
 
-        private void btnTitelWindowSize_Click(object sender, RoutedEventArgs e)
-        {
-            this.menuGameSize.PlacementTarget = this.btnTitelWindowSize;
-            this.menuGameSize.Placement = PlacementMode.Bottom;
-            this.menuGameSize.IsOpen = true;
-        }
-
         private void winMain_LocationChanged(object sender, EventArgs e)
         {
-            ResetWindowSize();
+            //ResetWindowSize();
+            if (ChromeWindow.Instance != null)
+            {
+                Window window = Window.GetWindow(this);
+
+                ChromeWindow.Instance.Left = this.Left + 2;
+                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight + 32;
+
+                //Debug.WriteLine($"ChromeWindowSynchronize {ChromeWindow.Singleton.Left }, {ChromeWindow.Singleton.Top}");
+            }
         }
 
 
@@ -214,9 +222,101 @@ namespace OxoBrowser
             ChromeWindow.Instance.chromeMain.GetBrowser().Reload();
         }
 
-        private void menuGameSize_Click(object sender, RoutedEventArgs e)
+        private void comboBoxGameSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            
+            var comboBox = sender as ComboBox;
+            var selectedSize = comboBox.SelectedItem as ComboBoxItem;
+            string size = selectedSize.Content.ToString();
+            OnWebSelectionChanged(size);
+        }
+
+        public void OnWebSelectionChanged(string webSizeStr)
+        {
+            if (ChromeWindow.Instance == null)
+            {
+                return;
+            }
+            try
+            {
+                int webSize = int.Parse(webSizeStr.Replace("%", ""));
+                Debug.WriteLine(webSize);
+      
+                int oldBottomHeight = (int)this.Bar.ActualHeight + 32;
+
+                SetWinSite(webSize);
+
+                //System.Windows.Forms.Screen screen_ = System.Windows.Forms.Screen.FromHandle(new WindowInteropHelper(winMain).Handle);
+
+                Rect screenBounds = User32.GetWindowScreenBounds(winMain);
+
+                if (winMain.MinWidth > screenBounds.Width | ChromeWindow.Instance.Height + 100 > screenBounds.Height)
+                {
+                    //MessageBox.Show("你设置的尺寸超出了屏幕的大小！还原回100%！", "ERROR");
+                    SetWinSite(100);
+                    winMain.Height = ChromeWindow.Instance.Height + oldBottomHeight;
+                    winMain.Width = winMain.MinWidth;
+                }
+                else
+                {
+                    winMain.Height = ChromeWindow.Instance.Height + oldBottomHeight;
+                    winMain.Width = winMain.MinWidth;
+                }
+            }
+            catch (Exception ex)
+            {
+                EasyLog.Write(ex, LogLevel.Error);
+            }
+        }
+
+        private void SetWinSite(double site)
+        {
+            if (ChromeWindow.Instance == null)
+            {
+                return;
+            }
+
+            double oldHeight = AppConfig.Instance.ConfigData.SizeWithGameType().Height;
+            double oldWidth = AppConfig.Instance.ConfigData.SizeWithGameType().Width;
+            double heightMin = Bar.ActualHeight + 32;
+
+            double siteDouble = site / 100; // + dpi_site
+            Debug.WriteLine(siteDouble);
+
+            ChromeWindow.Instance.ApplyZoom(siteDouble);
+
+
+            Size gridGameArea = new Size();
+
+            gridGameArea.Height = oldHeight * (siteDouble);
+            gridGameArea.Width = oldWidth * (siteDouble);
+
+
+            ChromeWindow.Instance.MinHeight = gridGameArea.Height;
+            ChromeWindow.Instance.MinWidth = gridGameArea.Width;
+
+            ChromeWindow.Instance.chromeMain.MinHeight = gridGameArea.Height;
+            ChromeWindow.Instance.chromeMain.MinWidth = gridGameArea.Width;
+
+
+            ChromeWindow.Instance.Height = gridGameArea.Height;
+            ChromeWindow.Instance.Width = gridGameArea.Width;
+
+            ChromeWindow.Instance.chromeMain.Width = gridGameArea.Width;
+            ChromeWindow.Instance.chromeMain.Height = gridGameArea.Height;
+
+
+            Debug.WriteLine("Chrome位置:{0},{1} {2}x{3}",
+                ChromeWindow.Instance.chromeMain.RenderSize.Width,
+                ChromeWindow.Instance.chromeMain.RenderSize.Height,
+                ChromeWindow.Instance.chromeMain.Width,
+                ChromeWindow.Instance.chromeMain.Height
+                );
+
+
+
+            this.MinHeight = ChromeWindow.Instance.Height + heightMin + 4;
+            this.MinWidth = oldWidth * siteDouble + 4;
+
         }
 
         public void ResetWindowSize()

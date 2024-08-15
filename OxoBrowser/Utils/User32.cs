@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Windows;
 
 namespace OpenPandora
 {
@@ -112,8 +113,53 @@ namespace OpenPandora
         private const int SW_MAX = 11;
 
         public const int WM_SETFOCUS = 0x0007;
-        
 
+        [DllImport("user32.dll")]
+        private static extern IntPtr MonitorFromWindow(IntPtr hwnd, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, ref MonitorInfo lpmi);
+
+        private const uint MONITOR_DEFAULTTONEAREST = 0x00000002;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct MonitorInfo
+        {
+            public uint Size;
+            public RectStruct Monitor;
+            public RectStruct WorkArea;
+            public uint Flags;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct RectStruct
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        public static Rect GetWindowScreenBounds(Window window)
+        {
+            var windowInteropHelper = new System.Windows.Interop.WindowInteropHelper(window);
+            IntPtr hMonitor = MonitorFromWindow(windowInteropHelper.Handle, MONITOR_DEFAULTTONEAREST);
+
+            MonitorInfo monitorInfo = new MonitorInfo();
+            monitorInfo.Size = (uint)Marshal.SizeOf(typeof(MonitorInfo));
+            bool success = GetMonitorInfo(hMonitor, ref monitorInfo);
+            if (!success)
+            {
+                throw new InvalidOperationException("Unable to get monitor info.");
+            }
+
+            return new Rect(
+                monitorInfo.Monitor.Left,
+                monitorInfo.Monitor.Top,
+                monitorInfo.Monitor.Right - monitorInfo.Monitor.Left,
+                monitorInfo.Monitor.Bottom - monitorInfo.Monitor.Top
+            );
+        }
         public static void SwitchToProcess(Process process)
         {
             if (IsIconic((int)process.MainWindowHandle))

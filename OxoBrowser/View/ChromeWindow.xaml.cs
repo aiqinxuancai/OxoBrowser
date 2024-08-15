@@ -267,12 +267,26 @@ namespace OxoBrowser.Wins
 
             this.Dispatcher.Invoke((Action)(() =>
             {
-                WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
+                switch (AppConfig.Instance.ConfigData.GameType)
+                {
+                    case GameTypeEnum.KanColle:
+                        WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
+                        break;
+                    case GameTypeEnum.Touken:
+                        WebViewConfig.GetToukenHtml5Core(chromeMain);
+                        break;
+                }
+                
             }));
         }
 
+        public void ApplyZoom(double size)
+        {
+            chromeMain.SetZoomLevel(Math.Log(size, 1.2));
 
-        
+        }
+
+
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Debug.WriteLine("ChromeMain_MouseUp");
