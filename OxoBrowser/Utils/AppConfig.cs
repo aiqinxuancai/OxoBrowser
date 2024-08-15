@@ -40,7 +40,7 @@ namespace Base
             {
                 GameTypeEnum.KanColle => new Size(1200, 720),
                 GameTypeEnum.Touken => new Size(1136, 640),
-                _ => new Size(0,0)
+                _ => new Size(1200, 720),
             };
 
         }
