@@ -52,13 +52,13 @@
             Height="32"
             HorizontalAlignment="Left">
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
 
                 <ComboBox
                     x:Name="comboBoxGameSize"
-                    Height="28"
+                    Height="32"
                     SelectedIndex="4"
-                    SelectionChanged="comboBoxGameSize_SelectionChanged">
+                    SelectionChanged="comboBoxGameSize_SelectionChanged" Padding="10,5,10,3">
                     <!--  Default to 100%  -->
                     <ComboBoxItem Content="200%" />
                     <ComboBoxItem Content="175%" />
