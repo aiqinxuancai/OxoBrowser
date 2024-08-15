@@ -1,6 +1,7 @@
 ﻿using Base;
 using CefSharp;
-using MahApps.Metro.Controls;
+using OxoBrowser.Services;
+using OxoBrowser.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,7 +29,7 @@ namespace OxoBrowser.Wins
 
         public CefSharp.Wpf.ChromiumWebBrowser chromeMain;
 
-        public static ChromeWindow thisWindow ;
+        public static ChromeWindow Instance ;
 
         private bool mouseFirstLButtonDown = false;
         private bool mouseFirstLButtonUp = false;
@@ -40,6 +41,12 @@ namespace OxoBrowser.Wins
         private const int WM_LBUTTONUP = 514;
         private const int WM_KEYDOWN = 256;
         private const int WM_KEYUP = 257;
+        private const int WM_USER = 1024;
+        private const int WM_MOUSEWHEEL = 0x020A;
+
+        private const int TKB_CHECK_HOOK = 51301;
+        private const int TKB_CHROME_INPUT_FIX = 51302;
+
         /// <summary>
         /// 实现wpf无法响应点击消息的问题
         /// </summary>
@@ -53,18 +60,41 @@ namespace OxoBrowser.Wins
         {
             if (msg == WM_LBUTTONDOWN)
             {
+                //if (AppConfig.Instance.ConfigData.OpenChromeFixInput)
+                //{
+                //    return IntPtr.Zero;
+                //}
                 if (mouseFirstLButtonDown == false) //不处理第一次操作
                 {
+                    EasyLog.Write("WndProc:hookFirstMessage");
                     mouseFirstLButtonDown = true;
                     return IntPtr.Zero;
                 }
-                
+
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x / (int)dpiPointF.X, y / (int)dpiPointF.Y, MouseButtonType.Left, false, 1, CefEventFlags.None);
+                int trueX = x;
+                int trueY = y;
+
+                if (DpiAwareness.processAwareness == DpiAwareness.PROCESS_DPI_AWARENESS.Process_DPI_Unaware)
+                {
+                    trueX = x;
+                    trueY = y;
+                }
+                else
+                {
+                    trueX = (int)(x / dpiPointF.X);
+                    trueY = (int)(y / dpiPointF.Y);
+                }
+
+                OpenPandora.User32.SendMessage(hwnd.ToInt32(), OpenPandora.User32.WM_SETFOCUS, 0, 0);
+                FocusManager.SetIsFocusScope(chromeMain, true);
+                chromeMain.GetBrowser().GetHost().SendMouseMoveEvent(new MouseEvent(trueX, trueY, CefEventFlags.None), false);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(trueX, trueY, MouseButtonType.Left, false, 1, CefEventFlags.None);
+
                 handled = true;
             }
-            if (msg == WM_LBUTTONUP) 
+            if (msg == WM_LBUTTONUP)
             {
                 if (mouseFirstLButtonUp == false) //不处理第一次操作
                 {
@@ -73,12 +103,29 @@ namespace OxoBrowser.Wins
                 }
                 int x = (ushort)lParam.ToInt32();
                 int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
-                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(x / (int)dpiPointF.X, y / (int)dpiPointF.Y, MouseButtonType.Left, true, 1, CefEventFlags.None);
+                int trueX = x;
+                int trueY = y;
+
+                if (DpiAwareness.processAwareness == DpiAwareness.PROCESS_DPI_AWARENESS.Process_DPI_Unaware)
+                {
+                    trueX = x;
+                    trueY = y;
+                }
+                else
+                {
+                    trueX = (int)(x / dpiPointF.X);
+                    trueY = (int)(y / dpiPointF.Y);
+                }
+                OpenPandora.User32.SendMessage(hwnd.ToInt32(), OpenPandora.User32.WM_SETFOCUS, 0, 0);
+                FocusManager.SetIsFocusScope(chromeMain, true);
+                chromeMain.GetBrowser().GetHost().SendMouseClickEvent(trueX, trueY, MouseButtonType.Left, true, 1, CefEventFlags.None);
                 handled = true;
+                Debug.WriteLine($"消息点击：{x},{y} -> {trueX},{trueY}");
             }
             if (msg == WM_KEYDOWN)
             {
-                if (116 == wParam.ToInt32()) //(int)System.Windows.Forms.Keys.F5
+                //116 = F5
+                if (116 == wParam.ToInt32())
                 {
                     handled = true;
                 }
@@ -87,32 +134,93 @@ namespace OxoBrowser.Wins
             {
                 if (116 == wParam.ToInt32())
                 {
-                    chromeMain.Reload(); 
+                    chromeMain.Reload();
                     handled = true;
                 }
+            }
+            if (msg == WM_MOUSEWHEEL)
+            {
+                short delta = -120;
+                try
+                {
+                    // 转换为 Int64
+                    long wParamLong = wParam.ToInt64();
+
+                    // 提取 delta 值
+                    delta = (short)(wParamLong >> 16);
+                }
+                catch (Exception ex)
+                {
+                }
+
+                try
+                {
+                    int x = (ushort)lParam.ToInt32();
+                    int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
+                    // 获取鼠标的位置
+                    int trueX = x;
+                    int trueY = y;
+
+                    if (DpiAwareness.processAwareness == DpiAwareness.PROCESS_DPI_AWARENESS.Process_DPI_Unaware)
+                    {
+                        trueX = x;
+                        trueY = y;
+                    }
+                    else
+                    {
+                        trueX = (int)(x / dpiPointF.X);
+                        trueY = (int)(y / dpiPointF.Y);
+                    }
+
+                    // 发送鼠标滚轮滚动消息
+                    //host.SendMouseWheelEvent(mouseEvent, 0, delta);
+
+                    chromeMain.GetBrowser().GetHost().SendMouseWheelEvent(new MouseEvent(trueX, trueY, CefEventFlags.None), 0, (int)delta);
+                    handled = true;
+                }
+                catch (Exception ex)
+                {
+
+
+                }
+
+            }
+            if (msg == TKB_CHECK_HOOK) // 检测子类化是否安装
+            {
+                EasyLog.Write("RecvMessage:TKB_CHECK_HOOK");
+                handled = true;
+                return new IntPtr(1);
+            }
+            if (msg == TKB_CHROME_INPUT_FIX) // 检测子类化是否安装
+            {
+                EasyLog.Write("RecvMessage:TKB_CHECK_HOOK");
+
+                //AppConfig.Instance.ConfigData.OpenChromeFixInput = wParam.ToInt32() == 1;
+                //GlobalNotification.Default.Post(NotificationType.kSettingChange, null);
+                handled = true;
+                return new IntPtr(1);
             }
 
             return IntPtr.Zero;
         }
 
+
         public ChromeWindow()
         {
             InitializeComponent();
-            thisWindow = this;
+            Instance = this;
             dpiPointF = WebBrowserZoomInvoker.GetCurrentDIPScale();
         }
 
         ~ChromeWindow()
         {
-            thisWindow = null;
+            Instance = null;
         }
-
-
 
 
         public static void Create(Window from)
         {
-            if (thisWindow == null)
+            if (Instance == null)
             {
                 ChromeWindow winLog = new ChromeWindow();
                 winLog.Owner = from;
@@ -144,10 +252,8 @@ namespace OxoBrowser.Wins
             chromeMain.RequestHandler = new OxoRequestHandler();
             chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
-
             //chromeMain.Address = "http://html5test.com/";
             //chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-
             //chromeMain.Address = "https://apis.baidu.com/store/aladdin/land?cardType=ipSearch";
         
 
@@ -159,12 +265,14 @@ namespace OxoBrowser.Wins
             if (e.IsLoading)
                 return;
 
-            this.BeginInvoke((Action)(() =>
+            this.Dispatcher.Invoke((Action)(() =>
             {
                 WebViewConfig.GetKanColle2ndHtml5Core(chromeMain);
             }));
         }
 
+
+        
         private void ChromeMain_MouseUp(object sender, MouseButtonEventArgs e)
         {
             Debug.WriteLine("ChromeMain_MouseUp");

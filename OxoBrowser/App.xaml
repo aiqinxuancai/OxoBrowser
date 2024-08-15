@@ -1,20 +1,15 @@
-﻿<Application x:Class="OxoBrowser.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:OxoBrowser"
-             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-             StartupUri="MainWindow.xaml">
+﻿<Application
+    x:Class="OxoBrowser.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:OxoBrowser"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
-                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />-->
-                <!--<ResourceDictionary Source="pack://application:,,,/View/Controls/MetroColor.xaml" />-->
-                <!--<ui:ThemesDictionary Theme="Light" />
-                <ui:ControlsDictionary />-->
+                <ui:ThemesDictionary Theme="Light" />
+                <ui:ControlsDictionary />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

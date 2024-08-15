@@ -1,5 +1,5 @@
-﻿using MahApps.Metro.Controls;
-using OxoBrowser.Controls;
+﻿
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,15 +22,20 @@ using CefSharp;
 using System.Windows.Interop;
 using OxoBrowser.Wins;
 using CefSharp.Wpf;
+using System.Reflection.Metadata;
+using Wpf.Ui.Controls;
+using Wpf.Ui;
+using Wpf.Ui.Extensions;
+using OxoBrowser.View;
 
 namespace OxoBrowser
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow
     {
-        public static MainWindow thisFrm;
+        public static MainWindow Instance { set; get; }
 
         private static readonly bool DebuggingSubProcess = Debugger.IsAttached;
 
@@ -39,7 +44,7 @@ namespace OxoBrowser
 
         public MainWindow()
         {
-            thisFrm = this;
+            Instance = this;
             InitializeComponent();
         }
 
@@ -48,16 +53,8 @@ namespace OxoBrowser
         {
             InitUI();
             UpdataSoundButton();
-
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=486104/"); //花骑士
-            //webMain.Navigate("http://www.dmm.com/netgame/social/-/gadgets/=/app_id=825012/"); //刀剑
-            //webMain.Navigate("https://www.whatismybrowser.com/"); //花骑士
-
-
             ChromeWindow.Create(this);
-
-            ChromeWindowSynchronize();
-
+            ResetWindowSize();
         }
 
         /// <summary>
@@ -65,8 +62,8 @@ namespace OxoBrowser
         /// </summary>
         private void InitUI()
         {
-            this.flyoutConfig.textConfigIP.Text = AppConfig.m_config.ProxyIP;
-            this.flyoutConfig.textConfigPort.Text = AppConfig.m_config.ProxyPort;
+            //this.flyoutConfig.textConfigIP.Text = AppConfig.Instance.ConfigData.ProxyIP;
+            //this.flyoutConfig.textConfigPort.Text = AppConfig.Instance.ConfigData.ProxyPort;
         }
 
 
@@ -74,17 +71,17 @@ namespace OxoBrowser
         /// 是否将Web显示为图片 
         /// </summary>
         /// <param name="_show"></param>
-        private void ShowWebImage(bool show)
+        public void ShowWebImage(bool show)
         {
             if (show)
             {
-                imageWebMain.Source = Screenshot.BrowserSnapShot(ChromeWindow.thisWindow);
-                ChromeWindow.thisWindow.Visibility = Visibility.Hidden;
+                imageWebMain.Source = Screenshot.BrowserSnapShot(ChromeWindow.Instance);
+                ChromeWindow.Instance.Visibility = Visibility.Hidden;
             }
             else
             {
                 imageWebMain.Source = null;
-                ChromeWindow.thisWindow.Visibility = Visibility.Visible;
+                ChromeWindow.Instance.Visibility = Visibility.Visible;
             }
 
         }
@@ -95,7 +92,7 @@ namespace OxoBrowser
         /// <param name="_soundClose"></param>
         private void UpdataSoundButton()
         {
-            if (AppConfig.m_config.SoundClose == false)
+            if (AppConfig.Instance.ConfigData.SoundClose == false)
             {
                 btnTitelSound.Visibility = Visibility.Visible;
                 btnTitelSoundClose.Visibility = Visibility.Collapsed;
@@ -114,29 +111,57 @@ namespace OxoBrowser
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnTitelConfig_Click(object sender, RoutedEventArgs e)
+        private async void btnTitelConfig_Click(object sender, RoutedEventArgs e)
         {
             if(imageWebMain.Source == null)
             {
-                ToggleFlyout(0);
+
+
+                
+                //ToggleFlyout(0);
                 ShowWebImage(true);
+                ShowSettingsView();
+
+
+
             }
             else
             {
-                ToggleFlyout(0);
+                ShowWebImage(false);
             }
         }
 
-
-        public void ToggleFlyout(int index)
+        private async void ShowSettingsView()
         {
-            var flyout = this.flyouts.Items[index] as Flyout;
-            if (flyout == null)
-            {
-                return;
-            }
-            flyout.IsOpen = !flyout.IsOpen;
+            IContentDialogService service = new ContentDialogService();
+            service.SetContentPresenter(DialogPresenter);
+            //ContentDialogResult result = await service.ShowSimpleDialogAsync(
+            //    new SimpleContentDialogCreateOptions()
+            //    {
+            //        Title = "设置",
+            //        Content = new FlyoutConfig(),
+            //        PrimaryButtonText = "保存",
+
+            //        CloseButtonText = "取消",
+            //    }
+            //);
+
+
+            var termsOfUseContentDialog = new FlyoutConfigDialog(service.GetContentPresenter());
+            _ = await termsOfUseContentDialog.ShowAsync();
         }
+
+
+
+        //public void ToggleFlyout(int index)
+        //{
+        //    var flyout = this.flyouts.Items[index] as Flyout;
+        //    if (flyout == null)
+        //    {
+        //        return;
+        //    }
+        //    flyout.IsOpen = !flyout.IsOpen;
+        //}
 
         private void settingsFlyout_ClosingFinished(object sender, RoutedEventArgs e)
         {
@@ -146,15 +171,13 @@ namespace OxoBrowser
 
         private void btnTitelSound_Click(object sender, RoutedEventArgs e)
         {
-            AppConfig.m_config.SoundClose = true;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.SoundClose = true;
             UpdataSoundButton();
         }
 
         private void btnTitelSoundClose_Click(object sender, RoutedEventArgs e)
         {
-            AppConfig.m_config.SoundClose = false;
-            AppConfig.Save();
+            AppConfig.Instance.ConfigData.SoundClose = false;
             UpdataSoundButton();
         }
 
@@ -182,26 +205,41 @@ namespace OxoBrowser
 
         private void winMain_LocationChanged(object sender, EventArgs e)
         {
-            ChromeWindowSynchronize();
+            ResetWindowSize();
         }
 
-        private void ChromeWindowSynchronize()
-        {
-            if (ChromeWindow.thisWindow != null)
-            {
-                ChromeWindow.thisWindow.Left = this.Left;
-                ChromeWindow.thisWindow.Top = this.Top + this.TitleBarHeight;
-            }
-        }
 
         private void btnTitelReload_Click(object sender, RoutedEventArgs e)
         {
-            ChromeWindow.thisWindow.chromeMain.GetBrowser().Reload();
+            ChromeWindow.Instance.chromeMain.GetBrowser().Reload();
         }
 
         private void menuGameSize_Click(object sender, RoutedEventArgs e)
         {
             
         }
+
+        public void ResetWindowSize()
+        {
+            //根据Size来计算当前窗口的高度
+            if (ChromeWindow.Instance != null)
+            {
+                ChromeWindow.Instance.Left = this.Left + 2;
+                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight + 32;
+
+
+                var size = AppConfig.Instance.ConfigData.SizeWithGameType();
+
+                ChromeWindow.Instance.Width = size.Width;
+                ChromeWindow.Instance.Height = size.Height;
+
+                this.Width = ChromeWindow.Instance.Width + 2 * 2;
+                this.Height = Bar.ActualHeight + 32 + ChromeWindow.Instance.Height + 4;
+            }
+
+
+
+        }
+
     }
 }

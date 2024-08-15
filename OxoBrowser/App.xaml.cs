@@ -14,7 +14,6 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 
 
-
 namespace OxoBrowser
 {
     /// <summary>
@@ -34,22 +33,18 @@ namespace OxoBrowser
 
         public static string AppName = "";
 
+
+
+
         App() //初始化
         {
             InitAppPath();
-            //IEProxyHelper.SetIEUserAgent();
             IEProxyHelper.SetIE11KeyforWebBrowserControl(AppName);
             IEProxyHelper.SetGPUKeyforWebBrowserControl(AppName);
-            AppConfig.Init();
+       
             TitaniumWebProxy.Init();
-
-            //Add Custom assembly resolver
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
-
-            //Any CefSharp references have to be in another method with NonInlining
-            // attribute so the assembly rolver has time to do it's thing.
             InitializeCefSharp();
-
         }
 
 
@@ -70,7 +65,6 @@ namespace OxoBrowser
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void InitializeCefSharp()
         {
-            //var settings = new CefSettings();
             var setting = new CefSettings()
             {
                 CachePath = Directory.GetCurrentDirectory() + @"\Cache",
@@ -78,7 +72,7 @@ namespace OxoBrowser
 
             //setting.RemoteDebuggingPort = 8088;
             setting.Locale = "zh-CN";
-            //setting.UserAgent = "Mozilla/6.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2228.0 Safari/537.36";
+            setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
             //代理设置
             setting.CefCommandLineArgs.Add("enable-npapi", "1");
@@ -116,8 +110,6 @@ namespace OxoBrowser
 
         }
 
-        // Will attempt to load missing assembly from either x86 or x64 subdir
-        // Required by CefSharp to load the unmanaged dependencies when running using AnyCPU
         private static Assembly Resolver(object sender, ResolveEventArgs args)
         {
             if (args.Name.StartsWith("CefSharp"))

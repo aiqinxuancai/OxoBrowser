@@ -38,7 +38,7 @@ namespace OxoBrowser.Services
 
         public static void UpdateUpStreamProxy()
         {
-            string proxy = AppConfig.m_config.ProxyIP + ":" + AppConfig.m_config.ProxyPort;
+            string proxy = AppConfig.Instance.ConfigData.ProxyIP + ":" + AppConfig.Instance.ConfigData.ProxyPort;
             
 
             if (Regex.IsMatch(proxy, @"^\d+$")) //只输入了端口 则补充完全
@@ -46,7 +46,7 @@ namespace OxoBrowser.Services
                 proxy = "127.0.0.1:" + proxy;
             }
 
-            if (string.IsNullOrWhiteSpace(AppConfig.m_config.ProxyIP) || string.IsNullOrWhiteSpace(proxy))
+            if (string.IsNullOrWhiteSpace(AppConfig.Instance.ConfigData.ProxyIP) || string.IsNullOrWhiteSpace(proxy))
             {
                 proxyServer.UpStreamHttpProxy = null;
             }

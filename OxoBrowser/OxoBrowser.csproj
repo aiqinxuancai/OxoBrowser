@@ -20,17 +20,23 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="CefSharp.Wpf">
       <Version>86.0.241</Version>
     </PackageReference>
-    <PackageReference Include="MahApps.Metro" Version="2.4.10" />
-    <PackageReference Include="MahApps.Metro.IconPacks" Version="5.0.0" />
+
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" />
     <PackageReference Include="System.Drawing.Common" Version="8.0.7" />
     <PackageReference Include="Titanium.Web.Proxy" Version="3.1.1344" />
 
-    <PackageReference Include="WPF-UI" Version="2.0.3" />
+    <PackageReference Include="WPF-UI" Version="3.0.5" />
   </ItemGroup>
 </Project>
