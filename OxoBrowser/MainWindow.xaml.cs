@@ -18,10 +18,8 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
 using System.IO;
-using CefSharp;
 using System.Windows.Interop;
 using OxoBrowser.Wins;
-using CefSharp.Wpf;
 using System.Reflection.Metadata;
 using Wpf.Ui.Controls;
 using Wpf.Ui;
@@ -32,6 +30,8 @@ using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Forms;
 using OpenPandora;
+using System.Threading.Tasks;
+using Microsoft.Web.WebView2.Core;
 
 
 namespace OxoBrowser
@@ -44,9 +44,6 @@ namespace OxoBrowser
         public static MainWindow Instance { set; get; }
 
         private static readonly bool DebuggingSubProcess = Debugger.IsAttached;
-
-
-        public CefSharp.Wpf.ChromiumWebBrowser chromeMain;
 
         public MainWindow()
         {
@@ -77,19 +74,37 @@ namespace OxoBrowser
         /// 是否将Web显示为图片 
         /// </summary>
         /// <param name="_show"></param>
-        public void ShowWebImage(bool show)
+        public async Task<bool> ShowWebImage(bool show)
         {
             if (show)
             {
-                imageWebMain.Source = Screenshot.BrowserSnapShot(ChromeWindow.Instance);
-                ChromeWindow.Instance.Visibility = Visibility.Hidden;
+                imageWebMain.Source = ConvertImageToImageSource(await ChromeWindow.Instance.TakeWebScreenshot());
+                ChromeWindow.Instance.wv2.CoreWebView2.con.;
+                CoreWebView2Controller.
+                ChromeWindow.Instance.wv2.CoreWebView2.
             }
             else
             {
                 imageWebMain.Source = null;
-                ChromeWindow.Instance.Visibility = Visibility.Visible;
+                ChromeWindow.Instance.wv2.Visibility = Visibility.Visible;
             }
+            return true;
+        }
+        public ImageSource ConvertImageToImageSource(System.Drawing.Image image)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                image.Save(memoryStream, image.RawFormat);
+                memoryStream.Position = 0;
 
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.StreamSource = memoryStream;
+                bitmapImage.EndInit();
+
+                return bitmapImage;
+            }
         }
 
         /// <summary>
@@ -219,7 +234,7 @@ namespace OxoBrowser
 
         private void btnTitelReload_Click(object sender, RoutedEventArgs e)
         {
-            ChromeWindow.Instance.chromeMain.GetBrowser().Reload();
+            ChromeWindow.Instance.wv2.Reload();
         }
 
         private void comboBoxGameSize_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -294,22 +309,22 @@ namespace OxoBrowser
             ChromeWindow.Instance.MinHeight = gridGameArea.Height;
             ChromeWindow.Instance.MinWidth = gridGameArea.Width;
 
-            ChromeWindow.Instance.chromeMain.MinHeight = gridGameArea.Height;
-            ChromeWindow.Instance.chromeMain.MinWidth = gridGameArea.Width;
+            ChromeWindow.Instance.wv2.MinHeight = gridGameArea.Height;
+            ChromeWindow.Instance.wv2.MinWidth = gridGameArea.Width;
 
 
             ChromeWindow.Instance.Height = gridGameArea.Height;
             ChromeWindow.Instance.Width = gridGameArea.Width;
 
-            ChromeWindow.Instance.chromeMain.Width = gridGameArea.Width;
-            ChromeWindow.Instance.chromeMain.Height = gridGameArea.Height;
+            ChromeWindow.Instance.wv2.Width = gridGameArea.Width;
+            ChromeWindow.Instance.wv2.Height = gridGameArea.Height;
 
 
             Debug.WriteLine("Chrome位置:{0},{1} {2}x{3}",
-                ChromeWindow.Instance.chromeMain.RenderSize.Width,
-                ChromeWindow.Instance.chromeMain.RenderSize.Height,
-                ChromeWindow.Instance.chromeMain.Width,
-                ChromeWindow.Instance.chromeMain.Height
+                ChromeWindow.Instance.wv2.RenderSize.Width,
+                ChromeWindow.Instance.wv2.RenderSize.Height,
+                ChromeWindow.Instance.wv2.Width,
+                ChromeWindow.Instance.wv2.Height
                 );
 
 
