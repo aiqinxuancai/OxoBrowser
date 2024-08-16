@@ -344,15 +344,7 @@ namespace OxoBrowser
         {
             //btnGoFast.ContextMenu.IsOpen = true;
 
-            switch (AppConfig.Instance.ConfigData.GameType)
-            {
-                case GameTypeEnum.KanColle:
-                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-                    break;
-                case GameTypeEnum.Touken:
-                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
-                    break;
-            }
+            ChromeWindow.Instance.chromeMain.Address = AppConfig.Instance.ConfigData.UrlWithGameType();
 
         }
 
@@ -373,15 +365,7 @@ namespace OxoBrowser
             {
                 return;
             }
-            switch (AppConfig.Instance.ConfigData.GameType)
-            {
-                case GameTypeEnum.KanColle:
-                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-                    break;
-                case GameTypeEnum.Touken:
-                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
-                    break;
-            }
+            ChromeWindow.Instance.chromeMain.Address = AppConfig.Instance.ConfigData.UrlWithGameType();
             ResetWindowSize();
         }
     }

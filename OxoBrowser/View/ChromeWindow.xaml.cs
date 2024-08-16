@@ -256,16 +256,7 @@ namespace OxoBrowser.Wins
             //chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
             //chromeMain.Address = "https://apis.baidu.com/store/aladdin/land?cardType=ipSearch";
 
-            switch (AppConfig.Instance.ConfigData.GameType)
-            {
-                case GameTypeEnum.KanColle:
-                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
-                    break;
-                case GameTypeEnum.Touken:
-                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
-                    break;
-            }
-
+            ChromeWindow.Instance.chromeMain.Address = AppConfig.Instance.ConfigData.UrlWithGameType();
 
             chromeMain.Focus();
         }

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Threading;
 using PropertyChanged;
 using System.Drawing;
+using OxoBrowser.Wins;
 
 namespace Base
 {
@@ -42,6 +43,19 @@ namespace Base
                 GameTypeEnum.Touken => new Size(1136, 640),
                 _ => new Size(1200, 720),
             };
+
+        }
+
+        public string UrlWithGameType()
+        {
+            switch (AppConfig.Instance.ConfigData.GameType)
+            {
+                case GameTypeEnum.KanColle:
+                    return "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+                case GameTypeEnum.Touken:
+                    return "https://pc-play.games.dmm.com/play/tohken/";
+            }
+            return "";
 
         }
 
