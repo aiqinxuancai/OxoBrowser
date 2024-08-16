@@ -341,5 +341,19 @@ namespace OxoBrowser
 
         }
 
+        private void btnGoFast_Click(object sender, RoutedEventArgs e)
+        {
+            btnGoFast.ContextMenu.IsOpen = true;
+        }
+
+        private void KanColleUrl_Click(object sender, RoutedEventArgs e)
+        {
+            ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+        }
+
+        private void Touken_Click(object sender, RoutedEventArgs e)
+        {
+            ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
+        }
     }
 }

@@ -52,13 +52,17 @@
             Height="32"
             HorizontalAlignment="Left">
 
-            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <StackPanel
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
 
                 <ComboBox
                     x:Name="comboBoxGameSize"
                     Height="32"
+                    Padding="10,5,10,3"
                     SelectedIndex="4"
-                    SelectionChanged="comboBoxGameSize_SelectionChanged" Padding="10,5,10,3">
+                    SelectionChanged="comboBoxGameSize_SelectionChanged">
                     <!--  Default to 100%  -->
                     <ComboBoxItem Content="200%" />
                     <ComboBoxItem Content="175%" />
@@ -110,6 +114,25 @@
                     Click="btnTitelConfig_Click"
                     Icon="{ui:SymbolIcon Settings24}"
                     ToolTip="设置" />
+
+                <ui:Button
+                    x:Name="btnGoFast"
+                    Margin="2,0,0,0"
+                    Click="btnGoFast_Click"
+                    Content="快速跳转"
+                    Icon="{ui:SymbolIcon WebAsset24}"
+                    ToolTip="快速跳转" >
+
+                   <ui:Button.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="KanColle" Click="KanColleUrl_Click"/>
+                            <MenuItem Header="Touken" Click="Touken_Click"/>
+                        </ContextMenu>
+
+                    </ui:Button.ContextMenu>
+                </ui:Button>
+                
+
             </StackPanel>
         </Grid>
         <Grid
