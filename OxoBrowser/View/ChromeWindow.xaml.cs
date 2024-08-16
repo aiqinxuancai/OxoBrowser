@@ -250,18 +250,43 @@ namespace OxoBrowser.Wins
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
             chromeMain.RequestHandler = new OxoRequestHandler();
-            chromeMain.Address = "https://www.dmm.com/";
+            //chromeMain.Address = "https://www.dmm.com/";
             //chromeMain.Address = "http://pc-play.games.dmm.com/play/bungo/";
             //chromeMain.Address = "http://html5test.com/";
             //chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
             //chromeMain.Address = "https://apis.baidu.com/store/aladdin/land?cardType=ipSearch";
-        
+
+            switch (AppConfig.Instance.ConfigData.GameType)
+            {
+                case GameTypeEnum.KanColle:
+                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+                    break;
+                case GameTypeEnum.Touken:
+                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
+                    break;
+            }
+
 
             chromeMain.Focus();
         }
 
         private void ChromeMain_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
         {
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                if (e.IsLoading)
+                {
+                    MainWindow.Instance.LoadingStatusBtn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MainWindow.Instance.LoadingStatusBtn.Visibility = Visibility.Collapsed;
+                }
+
+
+            }));
+
+
             if (e.IsLoading)
                 return;
 

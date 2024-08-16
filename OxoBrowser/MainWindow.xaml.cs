@@ -68,8 +68,7 @@ namespace OxoBrowser
         /// </summary>
         private void InitUI()
         {
-            //this.flyoutConfig.textConfigIP.Text = AppConfig.Instance.ConfigData.ProxyIP;
-            //this.flyoutConfig.textConfigPort.Text = AppConfig.Instance.ConfigData.ProxyPort;
+            comboBoxGameType.SelectedIndex = (int)AppConfig.Instance.ConfigData.GameType;
         }
 
 
@@ -343,17 +342,46 @@ namespace OxoBrowser
 
         private void btnGoFast_Click(object sender, RoutedEventArgs e)
         {
-            btnGoFast.ContextMenu.IsOpen = true;
+            //btnGoFast.ContextMenu.IsOpen = true;
+
+            switch (AppConfig.Instance.ConfigData.GameType)
+            {
+                case GameTypeEnum.KanColle:
+                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+                    break;
+                case GameTypeEnum.Touken:
+                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
+                    break;
+            }
+
         }
 
         private void KanColleUrl_Click(object sender, RoutedEventArgs e)
         {
-            ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+            
         }
 
         private void Touken_Click(object sender, RoutedEventArgs e)
         {
-            ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
+            
+        }
+
+        private void comboBoxGameType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            AppConfig.Instance.ConfigData.GameType = (GameTypeEnum)comboBoxGameType.SelectedIndex;
+            if (ChromeWindow.Instance == null)
+            {
+                return;
+            }
+            switch (AppConfig.Instance.ConfigData.GameType)
+            {
+                case GameTypeEnum.KanColle:
+                    ChromeWindow.Instance.chromeMain.Address = "http://www.dmm.com/netgame/social/-/gadgets/=/app_id=854854/";
+                    break;
+                case GameTypeEnum.Touken:
+                    ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
+                    break;
+            }
         }
     }
 }
