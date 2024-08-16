@@ -382,6 +382,7 @@ namespace OxoBrowser
                     ChromeWindow.Instance.chromeMain.Address = "https://pc-play.games.dmm.com/play/tohken/";
                     break;
             }
+            ResetWindowSize();
         }
     }
 }
