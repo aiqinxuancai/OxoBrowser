@@ -15,7 +15,7 @@
     LocationChanged="winMain_LocationChanged"
     ResizeMode="CanMinimize"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="SingleBorderWindow"
+    WindowStyle="None"
     mc:Ignorable="d">
 
     <Grid>
