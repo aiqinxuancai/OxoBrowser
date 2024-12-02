@@ -209,7 +209,7 @@ namespace OxoBrowser
                 Window window = Window.GetWindow(this);
 
                 ChromeWindow.Instance.Left = this.Left + 2;
-                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight + 32;
+                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight;
 
                 //Debug.WriteLine($"ChromeWindowSynchronize {ChromeWindow.Singleton.Left }, {ChromeWindow.Singleton.Top}");
             }
@@ -240,7 +240,7 @@ namespace OxoBrowser
                 int webSize = int.Parse(webSizeStr.Replace("%", ""));
                 Debug.WriteLine(webSize);
       
-                int oldBottomHeight = (int)this.Bar.ActualHeight + 32;
+                int oldBottomHeight = (int)this.Bar.ActualHeight;
 
                 SetWinSite(webSize);
 
@@ -276,7 +276,7 @@ namespace OxoBrowser
 
             double oldHeight = AppConfig.Instance.ConfigData.SizeWithGameType().Height;
             double oldWidth = AppConfig.Instance.ConfigData.SizeWithGameType().Width;
-            double heightMin = Bar.ActualHeight + 32;
+            double heightMin = Bar.ActualHeight;
 
             double siteDouble = site / 100; // + dpi_site
             Debug.WriteLine(siteDouble);
@@ -324,7 +324,7 @@ namespace OxoBrowser
             if (ChromeWindow.Instance != null)
             {
                 ChromeWindow.Instance.Left = this.Left + 2;
-                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight + 32;
+                ChromeWindow.Instance.Top = this.Top + Bar.ActualHeight;
 
 
                 var size = AppConfig.Instance.ConfigData.SizeWithGameType();
@@ -333,7 +333,7 @@ namespace OxoBrowser
                 ChromeWindow.Instance.Height = size.Height;
 
                 this.Width = ChromeWindow.Instance.Width + 2 * 2;
-                this.Height = Bar.ActualHeight + 32 + ChromeWindow.Instance.Height + 4;
+                this.Height = Bar.ActualHeight + 40 + ChromeWindow.Instance.Height + 4;
             }
 
 

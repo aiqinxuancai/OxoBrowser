@@ -25,8 +25,8 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="2" Grid.ColumnSpan="2">
@@ -47,15 +47,15 @@
 
 
         <Grid
-            Grid.Row="1"
+            Grid.Row="2"
             Grid.ColumnSpan="2"
-            Height="32"
+            Height="40"
             HorizontalAlignment="Left">
 
             <StackPanel
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Orientation="Horizontal">
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Orientation="Horizontal" Margin="8,0,0,0">
 
 
                 <ComboBox
