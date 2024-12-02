@@ -35,7 +35,7 @@
 
         <ui:TitleBar
             x:Name="Bar"
-            Title="Aria2Fast"
+            Title="OxoBrowser"
             Grid.Row="0"
             Grid.ColumnSpan="2">
             <ui:TitleBar.Icon>

@@ -47,6 +47,12 @@ namespace OxoBrowser.Wins
         private const int TKB_CHECK_HOOK = 51301;
         private const int TKB_CHROME_INPUT_FIX = 51302;
 
+        private const int TKB_OTHER_MOUSEMOVE = 51400;
+        private const int TKB_OTHER_MOUSEWHEEL = 51401;
+
+        private const int TKB_OTHER_LBUTTONDOWNL = 51402;
+        private const int TKB_OTHER_LBUTTONUP = 51404;
+
         /// <summary>
         /// 实现wpf无法响应点击消息的问题
         /// </summary>
@@ -60,10 +66,6 @@ namespace OxoBrowser.Wins
         {
             if (msg == WM_LBUTTONDOWN)
             {
-                //if (AppConfig.Instance.ConfigData.OpenChromeFixInput)
-                //{
-                //    return IntPtr.Zero;
-                //}
                 if (mouseFirstLButtonDown == false) //不处理第一次操作
                 {
                     EasyLog.Write("WndProc:hookFirstMessage");
@@ -124,7 +126,6 @@ namespace OxoBrowser.Wins
             }
             if (msg == WM_KEYDOWN)
             {
-                //116 = F5
                 if (116 == wParam.ToInt32())
                 {
                     handled = true;
@@ -138,7 +139,7 @@ namespace OxoBrowser.Wins
                     handled = true;
                 }
             }
-            if (msg == WM_MOUSEWHEEL)
+            if (msg == TKB_OTHER_MOUSEWHEEL) //自定义滚轮事件
             {
                 short delta = -120;
                 try
@@ -171,6 +172,7 @@ namespace OxoBrowser.Wins
                         trueX = (int)(x / dpiPointF.X);
                         trueY = (int)(y / dpiPointF.Y);
                     }
+                    //Debug.WriteLine($"鼠标滚动{trueX},{trueY}");
 
                     // 发送鼠标滚轮滚动消息
                     //host.SendMouseWheelEvent(mouseEvent, 0, delta);
@@ -185,6 +187,31 @@ namespace OxoBrowser.Wins
                 }
 
             }
+            if (msg == TKB_OTHER_MOUSEMOVE) //自定义移动事件
+            {
+  
+
+                int x = (ushort)lParam.ToInt32();
+                int y = (ushort)(lParam.ToInt32() >> 16) & 0xFFFF;
+                int trueX = x;
+                int trueY = y;
+
+                if (DpiAwareness.processAwareness == DpiAwareness.PROCESS_DPI_AWARENESS.Process_DPI_Unaware)
+                {
+                    trueX = x;
+                    trueY = y;
+                }
+                else
+                {
+                    trueX = (int)(x / dpiPointF.X);
+                    trueY = (int)(y / dpiPointF.Y);
+                }
+
+
+                // 发送鼠标移动事件到 CefSharp
+                chromeMain.GetBrowser().GetHost().SendMouseMoveEvent(new MouseEvent(trueX, trueY, CefEventFlags.None), false);
+                handled = true;
+            }
             if (msg == TKB_CHECK_HOOK) // 检测子类化是否安装
             {
                 EasyLog.Write("RecvMessage:TKB_CHECK_HOOK");
@@ -193,10 +220,6 @@ namespace OxoBrowser.Wins
             }
             if (msg == TKB_CHROME_INPUT_FIX) // 检测子类化是否安装
             {
-                EasyLog.Write("RecvMessage:TKB_CHECK_HOOK");
-
-                //AppConfig.Instance.ConfigData.OpenChromeFixInput = wParam.ToInt32() == 1;
-                //GlobalNotification.Default.Post(NotificationType.kSettingChange, null);
                 handled = true;
                 return new IntPtr(1);
             }
