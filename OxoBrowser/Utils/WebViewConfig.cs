@@ -99,9 +99,20 @@ namespace Base
             {
                 var mainframe = GetFrameContainsUrl(browser, @"http://pc-play.games.dmm.com/play/tohken");
                 var gameframe = GetFrame(browser, "game_frame");
+
+
                 var css = "var node = document.createElement('style'); " +
                                 "node.innerHTML = '" + kDMMDoukenCSS + "'" +
                                 "document.body.appendChild(node);";
+
+
+
+                if (gameframe != null)
+                {
+                    string script = "document.body.style.overflow = 'hidden';";
+                    gameframe.ExecuteJavaScriptAsync(script);
+                }
+
 
                 browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
                 "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
@@ -128,20 +139,14 @@ namespace Base
                 browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
     "node.innerHTML = '#header {display: none;}'; " +
     "document.body.appendChild(node);");
-
-                //mainframe?.EvaluateScriptAsync(string.Format(Properties.Resources.PageScript, StyleClassID));
-                //mainframe?.EvaluateScriptAsync(string.Format(Properties.Resources.PageScript, StyleClassID));
-
-                //mainframe.EvaluateScriptAsync(string.Format(Properties.Resources.PageScript, StyleClassID));
-                //gameframe.EvaluateScriptAsync(string.Format(Properties.Resources.FrameScript, StyleClassID));
-
-                //gameframe?.EvaluateScriptAsync(string.Format(Properties.Resources.FrameScript, StyleClassID));
+                
             }
             catch (Exception ex)
             {
                 EasyLog.Write(ex.ToString());
             }
         }
+
 
 
         public void ApplyStyleSheet(FrameLoadEndEventArgs e = null)
