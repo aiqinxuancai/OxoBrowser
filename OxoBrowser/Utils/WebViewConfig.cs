@@ -11,6 +11,8 @@ using OxoBrowser;
 using CefSharp;
 using System.Windows.Interop;
 using OxoBrowser.Services;
+using System.Windows.Threading;
+using System.Windows;
 
 
 namespace Base
@@ -107,6 +109,26 @@ namespace Base
                         {
                             string script = "document.body.style.overflow = 'hidden';";
                             gameframe.ExecuteJavaScriptAsync(script);
+                        } 
+                        else
+                        {
+                            Task.Run(async () => {
+
+                                await Task.Delay(5000);
+
+                                Dispatcher mainThreadDispatcher = Application.Current.Dispatcher;
+                                mainThreadDispatcher.Invoke(() =>
+                                {
+                                    var gameframe = GetFrame(browser, "game_frame");
+                                    if (gameframe != null)
+                                    {
+                                        string script = "document.body.style.overflow = 'hidden';";
+                                        gameframe.ExecuteJavaScriptAsync(script);
+                                    }
+                                });
+
+
+                            });
                         }
                     }
                     catch (Exception ex)
