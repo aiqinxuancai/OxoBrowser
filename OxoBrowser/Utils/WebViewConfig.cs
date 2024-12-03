@@ -97,49 +97,48 @@ namespace Base
 		{
             try
             {
-                var mainframe = GetFrameContainsUrl(browser, @"http://pc-play.games.dmm.com/play/tohken");
-                var gameframe = GetFrame(browser, "game_frame");
-
-
-                var css = "var node = document.createElement('style'); " +
-                                "node.innerHTML = '" + kDMMDoukenCSS + "'" +
-                                "document.body.appendChild(node);";
-
-
-
-                if (gameframe != null)
+                //var mainframe = GetFrameContainsUrl(browser, @"http://pc-play.games.dmm.com/play/tohken");
+                if (browser.Address.StartsWith("https://play.games.dmm.com/game/tohken"))
                 {
-                    string script = "document.body.style.overflow = 'hidden';";
-                    gameframe.ExecuteJavaScriptAsync(script);
+                    try
+                    {
+                        var gameframe = GetFrame(browser, "game_frame");
+                        if (gameframe != null)
+                        {
+                            string script = "document.body.style.overflow = 'hidden';";
+                            gameframe.ExecuteJavaScriptAsync(script);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                    browser.ExecuteScriptAsync(@"
+                    (function() {
+                        const styles = `
+                            html, body, iframe {overflow:hidden;margin:0;}
+                            #game_frame {overflow: hidden !important; position: fixed; left: 0; top: 0; width: 100% !important; height: 100% !important; z-index:1;}
+                            ul.area-menu {display: none;}
+                            .dmm-ntgnavi {display: none;}
+                        `;
+
+                        // 检查相同的样式
+                        const existingStyles = document.getElementsByTagName('style');
+                        for (let i = 0; i < existingStyles.length; i++) {
+                            if (existingStyles[i].innerHTML.includes(styles)) {
+                                return;
+                            }
+                        }
+
+                        const styleNode = document.createElement('style');
+                        styleNode.innerHTML = styles;
+                        document.body.appendChild(styleNode);
+                    })();
+                    ");
+
                 }
 
-
-                browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                "node.innerHTML = 'html, body, iframe {overflow:hidden;margin:0;}'; " +
-                "document.body.appendChild(node);");
-
-                //chrome.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                //    "node.innerHTML = '#game_frame {position:fixed; left:50%; top:0px; margin-left:-480px; z-index:1;}'; " +
-                //    "document.body.appendChild(node);");
-
-                browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-    "node.innerHTML = '#game_frame {position: fixed; left: 0; top: 0; width: 100% !important; height: 100% !important; z-index:1;}'; " +
-    "document.body.appendChild(node);");
-
-
-
-                browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                    "node.innerHTML = 'ul.area-menu {display: none;}'; " +
-                    "document.body.appendChild(node);");
-                browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-                    "node.innerHTML = '.dmm-ntgnavi {display: none;}'; " +
-                    "document.body.appendChild(node);");
-
-
-                browser.ExecuteScriptAsync("var node = document.createElement('style'); " +
-    "node.innerHTML = '#header {display: none;}'; " +
-    "document.body.appendChild(node);");
-                
             }
             catch (Exception ex)
             {
