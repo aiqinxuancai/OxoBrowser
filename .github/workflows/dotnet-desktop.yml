@@ -15,9 +15,9 @@ jobs:
         with:
           submodules: true
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '10.0.x'
 
       - name: Determine Pre-release Status
         id: prerelease
@@ -47,7 +47,7 @@ jobs:
         run:  dotnet publish -c Release -r win-x64 --self-contained=true
       - run: powershell curl https://github.com/aiqinxuancai/DotNetDllPathPatcherWPF/releases/download/v0.0.15/DotNetDllPathPatcherCMD.zip -o DotNetDllPathPatcherCMD.zip
       - run: powershell Expand-Archive -Path .\DotNetDllPathPatcherCMD.zip -DestinationPath .\DotNetDllPathPatcherCMD
-      - run: powershell .\DotNetDllPathPatcherCMD\publish\DotNetDllPathPatcherCMD.exe $env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net8.0-windows\win-x64\publish\OxoBrowser.exe
+      - run: powershell .\DotNetDllPathPatcherCMD\publish\DotNetDllPathPatcherCMD.exe $env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net10.0-windows\win-x64\publish\OxoBrowser.exe
       # 下载并解压aria2
       # - name: Download and Extract Aria2
       #   run: |
@@ -60,7 +60,7 @@ jobs:
       #     Remove-Item -Path $tempDir -Recurse -Force
       #   shell: powershell
       - name: Compress
-        run: powershell Compress-Archive -Path $env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net8.0-windows\win-x64\publish -DestinationPath .\OxoBrowser.zip
+        run: powershell Compress-Archive -Path $env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net10.0-windows\win-x64\publish -DestinationPath .\OxoBrowser.zip
       - name: Process tag and rename file
         id: processTag
         run: |

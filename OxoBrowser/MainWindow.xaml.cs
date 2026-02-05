@@ -30,7 +30,6 @@ using OxoBrowser.View;
 using OxoBrowser.Services;
 using System.Windows;
 using System.Windows.Interop;
-using System.Windows.Forms;
 using OpenPandora;
 
 
