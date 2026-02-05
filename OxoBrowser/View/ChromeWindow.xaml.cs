@@ -269,6 +269,7 @@ namespace OxoBrowser.Wins
             chromeMain.MinHeight = 720;
             chromeMain.MinWidth = 1200;
             chromeMain.MouseUp += ChromeMain_MouseUp;
+            chromeMain.JsDialogHandler = new JsDialogHandlerNew();
             this.Content = chromeMain;
             chromeMain.FrameLoadEnd += ChromeMain_FrameLoadEnd;
             chromeMain.LoadingStateChanged += ChromeMain_LoadingStateChanged;
