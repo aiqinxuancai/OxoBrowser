@@ -24,6 +24,7 @@ namespace OxoBrowser.View
     /// </summary>
     public partial class FlyoutConfigDialog : ContentDialog
     {
+        private bool _isThemeInitializing;
 
         public FlyoutConfigDialog(ContentPresenter contentPresenter)
         : base(contentPresenter)
@@ -40,6 +41,15 @@ namespace OxoBrowser.View
             textConfigPort.Text = AppConfig.Instance.ConfigData.ProxyPort;
 
 
+
+            _isThemeInitializing = true;
+            var themeIndex = (int)AppConfig.Instance.ConfigData.Theme;
+            if (themeIndex < 0 || themeIndex >= comboBoxTheme.Items.Count)
+            {
+                themeIndex = 0;
+            }
+            comboBoxTheme.SelectedIndex = themeIndex;
+            _isThemeInitializing = false;
 
             switch (AppConfig.Instance.ConfigData.GameType)
             {
@@ -77,6 +87,23 @@ namespace OxoBrowser.View
             MainWindow.Instance.ShowWebImage(false);
             MainWindow.Instance.ResetWindowSize();
             base.OnButtonClick(button);
+        }
+
+        private void ComboBoxTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isThemeInitializing)
+            {
+                return;
+            }
+
+            if (comboBoxTheme.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            var selectedTheme = (CatppuccinTheme)comboBoxTheme.SelectedIndex;
+            AppConfig.Instance.ConfigData.Theme = selectedTheme;
+            ThemeService.Apply(selectedTheme);
         }
 
         private void ButtonUseSystemProxy_Click(object sender, RoutedEventArgs e)

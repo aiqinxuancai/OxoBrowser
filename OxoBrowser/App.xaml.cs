@@ -45,6 +45,12 @@ namespace OxoBrowser
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
         }
 
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            ThemeService.Apply(AppConfig.Instance.ConfigData.Theme);
+            base.OnStartup(e);
+        }
+
 
         void InitAppPath()
         {

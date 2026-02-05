@@ -22,6 +22,12 @@ namespace Base
         Touken
     }
 
+    public enum CatppuccinTheme
+    {
+        Latte = 0,
+        Frappe
+    }
+
     [AddINotifyPropertyChangedInterface]
     public class AppConfigData : INotifyPropertyChanged
     {
@@ -33,6 +39,7 @@ namespace Base
         public string WebSize { get; set; }
 
         public GameTypeEnum GameType { get; set; }
+        public CatppuccinTheme Theme { get; set; } = CatppuccinTheme.Latte;
 
 
         public Size SizeWithGameType() {
@@ -106,6 +113,10 @@ namespace Base
                     var appData = JsonConvert.DeserializeObject<AppConfigData>(fileContent);
                     ConfigData = appData;
                     ConfigData.PropertyChanged += AppConfigData_PropertyChanged;
+                    if (ConfigData.Theme != CatppuccinTheme.Latte && ConfigData.Theme != CatppuccinTheme.Frappe)
+                    {
+                        ConfigData.Theme = CatppuccinTheme.Frappe;
+                    }
                 }
 
 
