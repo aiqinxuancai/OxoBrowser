@@ -41,33 +41,43 @@ namespace OxoBrowser.Services
             string proxy = AppConfig.Instance.ConfigData.ProxyIP + ":" + AppConfig.Instance.ConfigData.ProxyPort;
             
 
-            if (Regex.IsMatch(proxy, @"^\d+$")) //只输入了端口 则补充完全
+            try
             {
-                proxy = "127.0.0.1:" + proxy;
-            }
-
-            if (string.IsNullOrWhiteSpace(AppConfig.Instance.ConfigData.ProxyIP) || string.IsNullOrWhiteSpace(proxy))
-            {
-                proxyServer.UpStreamHttpProxy = null;
-            }
-            else
-            {
-                string[] proxys = proxy.Split(":".ToCharArray());
-                if (proxys.Length != 2)
+                if (Regex.IsMatch(proxy, @"^\d+$")) //只输入了端口 则补充完全
                 {
-                    EasyLog.Write("错误的代理设置");
+                    proxy = "127.0.0.1:" + proxy;
+                }
+
+                if (string.IsNullOrWhiteSpace(AppConfig.Instance.ConfigData.ProxyIP) || string.IsNullOrWhiteSpace(proxy))
+                {
+                    proxyServer.UpStreamHttpProxy = null;
                 }
                 else
                 {
-                    EasyLog.Write($"更新代理地址:{proxys[0]}:{proxys[1]}");
-
-                    proxyServer.UpStreamHttpProxy = new ExternalProxy
+                    string[] proxys = proxy.Split(":".ToCharArray());
+                    if (proxys.Length != 2)
                     {
-                        HostName = proxys[0],
-                        Port = int.Parse(proxys[1]),
-                    };
+                        EasyLog.Write("错误的代理设置");
+                    }
+                    else
+                    {
+                        EasyLog.Write($"更新代理地址:{proxys[0]}:{proxys[1]}");
+
+                        proxyServer.UpStreamHttpProxy = new ExternalProxy
+                        {
+                            HostName = proxys[0],
+                            Port = int.Parse(proxys[1]),
+                        };
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                EasyLog.Write(ex);
+                proxyServer.UpStreamHttpProxy = null;
+            }
+
+            
         }
 
         public static int GetCanUsePort()
