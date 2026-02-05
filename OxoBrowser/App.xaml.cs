@@ -41,10 +41,8 @@ namespace OxoBrowser
             InitAppPath();
             IEProxyHelper.SetIE11KeyforWebBrowserControl(AppName);
             IEProxyHelper.SetGPUKeyforWebBrowserControl(AppName);
-       
-            TitaniumWebProxy.Init();
+
             AppDomain.CurrentDomain.AssemblyResolve += Resolver;
-            InitializeCefSharp();
         }
 
 
@@ -62,51 +60,69 @@ namespace OxoBrowser
             AppName = Process.GetCurrentProcess().ProcessName + ".exe";
         }
 
+        private static readonly object CefInitLock = new object();
+        private static bool CefInitialized = false;
+
         [MethodImpl(MethodImplOptions.NoInlining)]
-        private static void InitializeCefSharp()
+        public static void InitializeCefSharp()
         {
-            var setting = new CefSettings()
+            lock (CefInitLock)
             {
-                CachePath = Directory.GetCurrentDirectory() + @"\Cache",
-            };
+                if (CefInitialized)
+                {
+                    return;
+                }
 
-            //setting.RemoteDebuggingPort = 8088;
-            setting.Locale = "zh-CN";
-            setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+                var setting = new CefSettings()
+                {
+                    CachePath = Directory.GetCurrentDirectory() + @"\Cache",
+                };
 
-            //代理设置
-            setting.CefCommandLineArgs.Add("enable-npapi", "1");
-            setting.CefCommandLineArgs.Add("--proxy-server", $"http://127.0.0.1:{TitaniumWebProxy.localProxyProt}");
-            //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
+                //setting.RemoteDebuggingPort = 8088;
+                setting.Locale = "zh-CN";
+                setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
-            //硬件加速设置
-            setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
-            //setting.CefCommandLineArgs.Add("disable-gpu", "0");
-            setting.SetOffScreenRenderingBestPerformanceArgs();
-            //setting.CefCommandLineArgs.Add("disable-gpu", "1");
-            //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
-            //setting.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
-            setting.CefCommandLineArgs.Add("enable-media-stream", "1");
+                //代理设置
+                setting.CefCommandLineArgs.Add("enable-npapi", "1");
+                if (TitaniumWebProxy.localProxyProt > 0)
+                {
+                    setting.CefCommandLineArgs.Add("--proxy-server", $"http://127.0.0.1:{TitaniumWebProxy.localProxyProt}");
+                }
+                else
+                {
+                    Debug.WriteLine("Proxy port not ready. Skip proxy-server args.");
+                }
+                //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
 
-            //Flash设置
-            setting.CefCommandLineArgs["enable-system-flash"] = "0";
-            //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
-            setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
-            setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
+                //硬件加速设置
+                setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
+                //setting.CefCommandLineArgs.Add("disable-gpu", "0");
+                setting.SetOffScreenRenderingBestPerformanceArgs();
+                //setting.CefCommandLineArgs.Add("disable-gpu", "1");
+                //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
+                //setting.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
+                setting.CefCommandLineArgs.Add("enable-media-stream", "1");
 
+                //Flash设置
+                setting.CefCommandLineArgs["enable-system-flash"] = "0";
+                //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
+                setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
+                setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
 
+                // Set BrowserSubProcessPath based on app bitness at runtime
+                setting.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
+                                                       Environment.Is64BitProcess ? "x64" : "x86",
+                                                       "CefSharp.BrowserSubprocess.exe");
 
-            // Set BrowserSubProcessPath based on app bitness at runtime
-            setting.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                                                   Environment.Is64BitProcess ? "x64" : "x86",
-                                                   "CefSharp.BrowserSubprocess.exe");
+                if (!Cef.Initialize(setting, performDependencyCheck: false, browserProcessHandler: null))
+                {
+                    throw new Exception("Unable to Initialize Cef");
+                }
 
-            if (!Cef.Initialize(setting, performDependencyCheck: false, browserProcessHandler: null))
-            {
-                throw new Exception("Unable to Initialize Cef");
+                CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
+
+                CefInitialized = true;
             }
-
-            CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
 
         }
 

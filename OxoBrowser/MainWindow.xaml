@@ -177,6 +177,25 @@
             <ContentPresenter Name="DialogPresenter" />
         </Grid>
 
+        <Grid
+            x:Name="StartupLoadingOverlay"
+            Grid.RowSpan="3"
+            Grid.ColumnSpan="2"
+            Panel.ZIndex="100"
+            Background="#80000000"
+            Visibility="Collapsed">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ui:ProgressRing
+                    Width="48"
+                    Height="48"
+                    IsIndeterminate="True" />
+                <TextBlock
+                    Margin="0,12,0,0"
+                    HorizontalAlignment="Center"
+                    Foreground="White"
+                    Text="初始化中..." />
+            </StackPanel>
+        </Grid>
 
     </Grid>
 </ui:FluentWindow>

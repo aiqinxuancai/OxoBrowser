@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using System.Reflection;
 using System.IO;
+using System.Threading.Tasks;
 using CefSharp;
 using System.Windows.Interop;
 using OxoBrowser.Wins;
@@ -54,12 +55,38 @@ namespace OxoBrowser
         }
 
 
-        private void winMain_Loaded(object sender, RoutedEventArgs e)
+        private async void winMain_Loaded(object sender, RoutedEventArgs e)
         {
             InitUI();
             UpdataSoundButton();
+            ShowStartupLoading(true);
+
+            string proxyError = string.Empty;
+            bool proxyReady = false;
+
+            await Task.Run(() =>
+            {
+                try
+                {
+                    TitaniumWebProxy.Init();
+                    proxyReady = true;
+                }
+                catch (Exception ex)
+                {
+                    proxyError = ex.Message;
+                    EasyLog.Write(ex);
+                }
+            });
+
+            if (!proxyReady)
+            {
+                System.Windows.MessageBox.Show($"代理初始化失败：{proxyError}\r\n将继续启动。", "提示");
+            }
+
+            App.InitializeCefSharp();
             ChromeWindow.Create(this);
             ResetWindowSize();
+            ShowStartupLoading(false);
         }
 
         /// <summary>
@@ -88,6 +115,11 @@ namespace OxoBrowser
                 ChromeWindow.Instance.Visibility = Visibility.Visible;
             }
 
+        }
+
+        private void ShowStartupLoading(bool show)
+        {
+            StartupLoadingOverlay.Visibility = show ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
