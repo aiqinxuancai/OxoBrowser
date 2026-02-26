@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
     Title="设置"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
+    d:DesignHeight="600"
+    d:DesignWidth="500"
     ui:Design.Background="{DynamicResource ApplicationBackgroundBrush}"
     ui:Design.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
     CloseButtonText="取消"
@@ -109,11 +109,11 @@
                         Grid.Column="0"
                         VerticalAlignment="Center"
                         FontWeight="SemiBold"
-                        Text="CEF 设置" />
+                        Text="CEF 设置" Cursor="Hand" />
                     <StackPanel Grid.Column="1" Orientation="Vertical">
                         <CheckBox
                             x:Name="checkChromeGpu"
-                            Content="启用 GPU 加速（CefSharp）" />
+                            Content="启用 GPU 加速" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0,5,11,6" />
                         <TextBlock
                             Margin="0,4,0,0"
                             Foreground="{DynamicResource TextFillColorSecondaryBrush}"
