@@ -39,6 +39,7 @@ namespace OxoBrowser.View
         {
             textConfigIP.Text = AppConfig.Instance.ConfigData.ProxyIP;
             textConfigPort.Text = AppConfig.Instance.ConfigData.ProxyPort;
+            checkChromeGpu.IsChecked = AppConfig.Instance.ConfigData.OpenChromeGPU;
 
 
 
@@ -67,6 +68,8 @@ namespace OxoBrowser.View
         {
             if (button == ContentDialogButton.Primary)
             {
+                AppConfig.Instance.ConfigData.OpenChromeGPU = checkChromeGpu.IsChecked == true;
+
                 if (textConfigIP.Text != AppConfig.Instance.ConfigData.ProxyIP || textConfigPort.Text != AppConfig.Instance.ConfigData.ProxyPort)
                 {
                     AppConfig.Instance.ConfigData.ProxyIP = textConfigIP.Text;

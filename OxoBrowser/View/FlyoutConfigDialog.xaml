@@ -93,9 +93,32 @@
                         Width="220"
                         HorizontalAlignment="Left"
                         SelectionChanged="ComboBoxTheme_SelectionChanged">
-                    <ComboBoxItem Content="Latte (浅色)" />
-                    <ComboBoxItem Content="Frappe (柔暗)" />
-                </ComboBox>
+                        <ComboBoxItem Content="Latte (浅色)" />
+                        <ComboBoxItem Content="Frappe (柔暗)" />
+                    </ComboBox>
+                </Grid>
+
+                <Separator Margin="0,12,0,12" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        FontWeight="SemiBold"
+                        Text="CEF 设置" />
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <CheckBox
+                            x:Name="checkChromeGpu"
+                            Content="启用 GPU 加速（CefSharp）" />
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                            Text="默认关闭。修改后需重启应用生效。" />
+                    </StackPanel>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

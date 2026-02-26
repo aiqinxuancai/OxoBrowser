@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using System.Windows;
 
@@ -79,55 +80,86 @@ namespace OxoBrowser
                     return;
                 }
 
-                var setting = new CefSettings()
+                try
                 {
-                    CachePath = Directory.GetCurrentDirectory() + @"\Cache",
-                };
+                    var setting = new CefSettings()
+                    {
+                        CachePath = Directory.GetCurrentDirectory() + @"\Cache",
+                    };
 
-                //setting.RemoteDebuggingPort = 8088;
-                setting.Locale = "zh-CN";
-                setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
+                    //setting.RemoteDebuggingPort = 8088;
+                    setting.Locale = "zh-CN";
+                    setting.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
 
-                //代理设置
-                setting.CefCommandLineArgs.Add("enable-npapi", "1");
-                if (TitaniumWebProxy.localProxyProt > 0)
-                {
-                    setting.CefCommandLineArgs.Add("--proxy-server", $"http://127.0.0.1:{TitaniumWebProxy.localProxyProt}");
+                    //代理设置
+                    setting.CefCommandLineArgs.Add("enable-npapi", "1");
+                    if (TitaniumWebProxy.localProxyProt > 0)
+                    {
+                        setting.CefCommandLineArgs.Add("--proxy-server", $"http://127.0.0.1:{TitaniumWebProxy.localProxyProt}");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Proxy port not ready. Skip proxy-server args.");
+                    }
+                    //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
+
+                    //硬件加速设置
+                    setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
+                    if (AppConfig.Instance.ConfigData.OpenChromeGPU == false)
+                    {
+                        // 关闭GPU加速
+                        setting.SetOffScreenRenderingBestPerformanceArgs();
+                    }
+                    else
+                    {
+                        setting.CefCommandLineArgs.Add("--multi-threaded-message-loop");
+                        setting.CefCommandLineArgs.Add("--off-screen-rendering-enabled");
+                        setting.CefCommandLineArgs.Add("--enable-gpu");
+                        setting.CefCommandLineArgs.Add("--no-sandbox");
+                        setting.CefCommandLineArgs.Add("--disable-site-isolation-trials");
+                        setting.CefCommandLineArgs.Add("--disable-gpu-compositing");
+                    }
+                    setting.CefCommandLineArgs.Add("enable-media-stream", "1");
+
+                    //Flash设置
+                    setting.CefCommandLineArgs["enable-system-flash"] = "0";
+                    //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
+                    setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
+                    setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
+
+                    // Set BrowserSubProcessPath (prefer .NETCore package layout, fallback to legacy layout)
+                    var basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                    var runtimeSubprocessPath = Path.Combine(basePath, "runtimes", GetCefRuntimeRid(), "native", "CefSharp.BrowserSubprocess.exe");
+                    var ridOutputSubprocessPath = Path.Combine(basePath, "CefSharp.BrowserSubprocess.exe");
+                    var legacySubprocessPath = Path.Combine(basePath,
+                        Environment.Is64BitProcess ? "x64" : "x86",
+                        "CefSharp.BrowserSubprocess.exe");
+
+                    setting.BrowserSubprocessPath = File.Exists(runtimeSubprocessPath)
+                        ? runtimeSubprocessPath
+                        : (File.Exists(ridOutputSubprocessPath) ? ridOutputSubprocessPath : legacySubprocessPath);
+
+                    if (!File.Exists(setting.BrowserSubprocessPath))
+                    {
+                        throw new FileNotFoundException(
+                            $"CefSettings.BrowserSubprocessPath not found. Checked: {runtimeSubprocessPath}; {ridOutputSubprocessPath}; {legacySubprocessPath}");
+                    }
+
+                    if (!Cef.Initialize(setting, performDependencyCheck: false, browserProcessHandler: null))
+                    {
+                        throw new Exception("Unable to Initialize Cef");
+                    }
+
+                    CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
+
+                    CefInitialized = true;
                 }
-                else
+                catch (Exception ex)
                 {
-                    Debug.WriteLine("Proxy port not ready. Skip proxy-server args.");
+                    EasyLog.Write(ex);
+                    Debug.WriteLine($"InitializeCefSharp failed: {ex}");
+                    throw;
                 }
-                //setting.CefCommandLineArgs.Add("--no-proxy-server", "1");
-
-                //硬件加速设置
-                setting.CefCommandLineArgs.Add("--enable-media-stream", "1");
-                //setting.CefCommandLineArgs.Add("disable-gpu", "0");
-                setting.SetOffScreenRenderingBestPerformanceArgs();
-                //setting.CefCommandLineArgs.Add("disable-gpu", "1");
-                //setting.CefCommandLineArgs.Add("disable-gpu-compositing", "1");
-                //setting.CefCommandLineArgs.Add("enable-begin-frame-scheduling", "1");
-                setting.CefCommandLineArgs.Add("enable-media-stream", "1");
-
-                //Flash设置
-                setting.CefCommandLineArgs["enable-system-flash"] = "0";
-                //setting.CefCommandLineArgs.Add("enable-system-flash", "0"); //Automatically discovered and load a system-wide installation of Pepper Flash.
-                setting.CefCommandLineArgs.Add("ppapi-flash-path", @".\plugins\pepflashplayer64_23_0_0_162.dll"); //Load a specific pepper flash version (Step 1 of 2)
-                setting.CefCommandLineArgs.Add("ppapi-flash-version", "23.0.0.162"); //Load a specific pepper flash version (Step 2 of 2)
-
-                // Set BrowserSubProcessPath based on app bitness at runtime
-                setting.BrowserSubprocessPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                                                       Environment.Is64BitProcess ? "x64" : "x86",
-                                                       "CefSharp.BrowserSubprocess.exe");
-
-                if (!Cef.Initialize(setting, performDependencyCheck: false, browserProcessHandler: null))
-                {
-                    throw new Exception("Unable to Initialize Cef");
-                }
-
-                CefSharpSettings.SubprocessExitIfParentProcessClosed = true;
-
-                CefInitialized = true;
             }
 
         }
@@ -137,16 +169,40 @@ namespace OxoBrowser
             if (args.Name.StartsWith("CefSharp"))
             {
                 string assemblyName = args.Name.Split(new[] { ',' }, 2)[0] + ".dll";
-                string archSpecificPath = Path.Combine(AppDomain.CurrentDomain.SetupInformation.ApplicationBase,
-                                                       Environment.Is64BitProcess ? "x64" : "x86",
-                                                       assemblyName);
+                string basePath = AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                string runtimeNativePath = Path.Combine(basePath, "runtimes", GetCefRuntimeRid(), "native", assemblyName);
+                if (File.Exists(runtimeNativePath))
+                {
+                    return Assembly.LoadFile(runtimeNativePath);
+                }
 
-                return File.Exists(archSpecificPath)
-                           ? Assembly.LoadFile(archSpecificPath)
-                           : null;
+                string legacyPath = Path.Combine(basePath,
+                    Environment.Is64BitProcess ? "x64" : "x86",
+                    assemblyName);
+                if (File.Exists(legacyPath))
+                {
+                    return Assembly.LoadFile(legacyPath);
+                }
+
+                string baseDirPath = Path.Combine(basePath, assemblyName);
+                if (File.Exists(baseDirPath))
+                {
+                    return Assembly.LoadFile(baseDirPath);
+                }
             }
 
             return null;
+        }
+
+        private static string GetCefRuntimeRid()
+        {
+            return RuntimeInformation.ProcessArchitecture switch
+            {
+                Architecture.X86 => "win-x86",
+                Architecture.X64 => "win-x64",
+                Architecture.Arm64 => "win-arm64",
+                _ => Environment.Is64BitProcess ? "win-x64" : "win-x86",
+            };
         }
 
     }

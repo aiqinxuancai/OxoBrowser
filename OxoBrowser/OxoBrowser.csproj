@@ -17,7 +17,7 @@
     <!-- <StartupObject>Walterlv.Whitman.Program</StartupObject> -->
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="icon.ico" />
@@ -26,10 +26,10 @@
     <Resource Include="icon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="CefSharp.Wpf">
-      <Version>86.0.241</Version>
+    <PackageReference Include="CefSharp.Wpf.NETCore">
+      <Version>95.7.141</Version>
     </PackageReference>
-
+    <PackageReference Include="chromiumembeddedframework.runtime.win-x64" Version="95.7.14" />
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
     </PackageReference>

@@ -36,6 +36,7 @@ namespace Base
         public string ProxyIP { get; set; }
         public string ProxyPort { get; set; }
         public bool SoundClose { get; set; }
+        public bool OpenChromeGPU { get; set; } = false;
         public string WebSize { get; set; }
 
         public GameTypeEnum GameType { get; set; }

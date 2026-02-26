@@ -45,6 +45,20 @@ jobs:
         run: dotnet test --no-build --verbosity normal
       - name: Publish
         run:  dotnet publish -c Release -r win-x64 --self-contained=true
+      - name: Replace CEF Core
+        shell: powershell
+        run: |
+          $publishDir = "$env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net10.0-windows\win-x64\publish"
+          Invoke-WebRequest -Uri "https://github.com/aiqinxuancai/DotNetDllPathPatcherWPF/releases/download/v0.0.15/cef_binary_95.7.18+g0d6005e+chromium-95.0.4638.69_windows64_minimal.zip" -OutFile "cef.zip"
+          Expand-Archive -Path ".\cef.zip" -DestinationPath ".\cef-core" -Force
+
+          $libcef = Get-ChildItem -Path ".\cef-core" -Recurse -Filter "libcef.dll" | Select-Object -First 1
+          if (-not $libcef) {
+            throw "libcef.dll not found in downloaded CEF package."
+          }
+
+          $cefRoot = Split-Path $libcef.FullName -Parent
+          Copy-Item -Path (Join-Path $cefRoot "*") -Destination $publishDir -Recurse -Force
       - run: powershell curl https://github.com/aiqinxuancai/DotNetDllPathPatcherWPF/releases/download/v0.0.15/DotNetDllPathPatcherCMD.zip -o DotNetDllPathPatcherCMD.zip
       - run: powershell Expand-Archive -Path .\DotNetDllPathPatcherCMD.zip -DestinationPath .\DotNetDllPathPatcherCMD
       - run: powershell .\DotNetDllPathPatcherCMD\publish\DotNetDllPathPatcherCMD.exe $env:GITHUB_WORKSPACE\OxoBrowser\bin\Release\net10.0-windows\win-x64\publish\OxoBrowser.exe
