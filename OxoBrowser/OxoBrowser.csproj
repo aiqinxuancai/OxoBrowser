@@ -27,7 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CefSharp.Wpf.NETCore">
-      <Version>95.7.141</Version>
+      <Version>134.3.90</Version>
     </PackageReference>
     <PackageReference Include="chromiumembeddedframework.runtime.win-x64" Version="95.7.14" />
     <PackageReference Include="Newtonsoft.Json">
